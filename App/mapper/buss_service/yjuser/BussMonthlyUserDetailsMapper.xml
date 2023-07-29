@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.yjuser.mapper.BussMonthlyUserDetailsMapper">
+
+    <resultMap type="com.cms.buss_service.yjuser.domain.BussMonthlyUserDetails" id="BussMonthlyUserDetailsResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="mouthUserId" column="mouth_user_id"/>
+        <result property="isManger" column="is_manger"/>
+    </resultMap>
+
+    <sql id="selectBussMonthlyUserDetailsVo">
+        SELECT ls.id, ls.user_id, ls.mouth_user_id,ls.is_manger        FROM buss_monthly_user_details AS ls
+    </sql>
+    <select id="queryUserInfoByIdAndYjId" resultType="com.cms.buss_service.yjuser.domain.BussMonthlyUserDetails">
+        select  * from buss_monthly_user_details where user_id = #{userId} AND mouth_user_id = #{mouthUserId}
+    </select>
+
+    <select id="queryUserIsSuperManger" resultType="java.lang.Integer">
+        SELECT count(1)  FROM buss_monthly_user_details  where mouth_user_id = #{mouthUserId} and is_manger = '1'
+    </select>
+
+    <select id="selectBussMonthlyUserDetailsList" parameterType="com.cms.buss_service.yjuser.domain.BussMonthlyUserDetails"
+            resultMap="BussMonthlyUserDetailsResult">
+        <include refid="selectBussMonthlyUserDetailsVo"/>
+        <where>
+            1 = 1
+            <if test="userId != null  and userId != ''">AND ls.user_id = #{userId}</if>
+            <if test="mouthUserId != null  and mouthUserId != ''">AND ls.mouth_user_id = #{mouthUserId}</if>
+            <if test="isManger != null  and isManger != ''">AND ls.is_manger = #{isManger}</if>
+        </where>
+        ${dataScope}
+    </select>
+
+    <select id="selectBussMonthlyUserDetailsById" parameterType="Long" resultMap="BussMonthlyUserDetailsResult">
+        <include refid="selectBussMonthlyUserDetailsVo"/>
+        WHERE ls.id = #{id}
+    </select>
+
+    <insert id="insertBussMonthlyUserDetails" parameterType="com.cms.buss_service.yjuser.domain.BussMonthlyUserDetails"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_monthly_user_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id,</if>
+            <if test="mouthUserId != null  and mouthUserId != ''">mouth_user_id,</if>
+            <if test="isManger != null  and isManger != ''">is_manger,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            <if test="mouthUserId != null  and mouthUserId != ''">#{mouthUserId},</if>
+            <if test="isManger != null  and isManger != ''">#{isManger},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussMonthlyUserDetails" parameterType="com.cms.buss_service.yjuser.domain.BussMonthlyUserDetails">
+        UPDATE buss_monthly_user_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+            <if test="mouthUserId != null  and mouthUserId != ''">mouth_user_id = #{mouthUserId},</if>
+            <if test="isManger != null">is_manger = #{isManger},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussMonthlyUserDetailsById" parameterType="Long">
+        DELETE FROM buss_monthly_user_details WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussMonthlyUserDetailsByIds" parameterType="String">
+        DELETE FROM buss_monthly_user_details WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

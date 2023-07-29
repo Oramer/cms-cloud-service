@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.offset.mapper.BussUserOffestMapper">
+
+    <resultMap type="com.cms.buss_service.offset.domain.BussUserOffest" id="BussUserOffestResult">
+            <result property="pk"    column="pk"    />
+            <result property="userPk"    column="user_pk"    />
+            <result property="offestAmount"    column="offest_amount"    />
+            <result property="reversion"    column="reversion"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="no1"    column="no1"    />
+            <result property="no2"    column="no2"    />
+            <result property="no3"    column="no3"    />
+            <result property="no4"    column="no4"    />
+            <result property="no5"    column="no5"    />
+            <result property="no6"    column="no6"    />
+            <result property="no7"    column="no7"    />
+            <result property="no8"    column="no8"    />
+            <result property="no9"    column="no9"    />
+            <result property="no10"    column="no10"    />
+            <result property="no11"    column="no11"    />
+            <result property="no12"    column="no12"    />
+            <result property="no13"    column="no13"    />
+            <result property="no14"    column="no14"    />
+            <result property="no15"    column="no15"    />
+    </resultMap>
+
+    <sql id="selectBussUserOffestVo">
+        SELECT st.pk, st.user_pk, st.offest_amount, st.reversion, st.create_by, st.create_time, st.update_by, st.update_time, st.no1, st.no2, st.no3, st.no4, st.no5, st.no6, st.no7, st.no8, st.no9, st.no10, st.no11, st.no12, st.no13, st.no14, st.no15
+        FROM buss_user_offest AS st
+        LEFT JOIN sys_user u ON u.user_id  =  st.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussUserOffestList" parameterType="com.cms.buss_service.offset.domain.BussUserOffest" resultMap="BussUserOffestResult">
+        <include refid="selectBussUserOffestVo"/>
+        <where>
+            1 = 1
+                        <if test="userPk != null  and userPk != ''"> AND st.user_pk = #{userPk}</if>
+                        <if test="offestAmount != null "> AND st.offest_amount = #{offestAmount}</if>
+                        <if test="reversion != null  and reversion != ''"> AND st.reversion = #{reversion}</if>
+                        <if test="no1 != null  and no1 != ''"> AND st.no1 = #{no1}</if>
+                        <if test="no2 != null  and no2 != ''"> AND st.no2 = #{no2}</if>
+                        <if test="no3 != null  and no3 != ''"> AND st.no3 = #{no3}</if>
+                        <if test="no4 != null  and no4 != ''"> AND st.no4 = #{no4}</if>
+                        <if test="no5 != null  and no5 != ''"> AND st.no5 = #{no5}</if>
+                        <if test="no6 != null  and no6 != ''"> AND st.no6 = #{no6}</if>
+                        <if test="no7 != null  and no7 != ''"> AND st.no7 = #{no7}</if>
+                        <if test="no8 != null  and no8 != ''"> AND st.no8 = #{no8}</if>
+                        <if test="no9 != null  and no9 != ''"> AND st.no9 = #{no9}</if>
+                        <if test="no10 != null  and no10 != ''"> AND st.no10 = #{no10}</if>
+                        <if test="no11 != null  and no11 != ''"> AND st.no11 = #{no11}</if>
+                        <if test="no12 != null  and no12 != ''"> AND st.no12 = #{no12}</if>
+                        <if test="no13 != null  and no13 != ''"> AND st.no13 = #{no13}</if>
+                        <if test="no14 != null  and no14 != ''"> AND st.no14 = #{no14}</if>
+                        <if test="no15 != null  and no15 != ''"> AND st.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY st.create_time DESC
+    </select>
+
+    <select id="selectBussUserOffestById" parameterType="String" resultMap="BussUserOffestResult">
+        <include refid="selectBussUserOffestVo"/>
+        WHERE st.pk = #{pk}
+    </select>
+
+    <insert id="insertBussUserOffest" parameterType="com.cms.buss_service.offset.domain.BussUserOffest">
+        INSERT INTO buss_user_offest
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="pk != null  and pk != ''">pk,</if>
+                    <if test="userPk != null  and userPk != ''">user_pk,</if>
+                    <if test="offestAmount != null ">offest_amount,</if>
+                    <if test="reversion != null  and reversion != ''">reversion,</if>
+                    <if test="createBy != null  and createBy != ''">create_by,</if>
+                    <if test="createTime != null  and createTime != ''">create_time,</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by,</if>
+                    <if test="updateTime != null  and updateTime != ''">update_time,</if>
+                    <if test="no1 != null  and no1 != ''">no1,</if>
+                    <if test="no2 != null  and no2 != ''">no2,</if>
+                    <if test="no3 != null  and no3 != ''">no3,</if>
+                    <if test="no4 != null  and no4 != ''">no4,</if>
+                    <if test="no5 != null  and no5 != ''">no5,</if>
+                    <if test="no6 != null  and no6 != ''">no6,</if>
+                    <if test="no7 != null  and no7 != ''">no7,</if>
+                    <if test="no8 != null  and no8 != ''">no8,</if>
+                    <if test="no9 != null  and no9 != ''">no9,</if>
+                    <if test="no10 != null  and no10 != ''">no10,</if>
+                    <if test="no11 != null  and no11 != ''">no11,</if>
+                    <if test="no12 != null  and no12 != ''">no12,</if>
+                    <if test="no13 != null  and no13 != ''">no13,</if>
+                    <if test="no14 != null  and no14 != ''">no14,</if>
+                    <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="pk != null  and pk != ''">#{pk},</if>
+                    <if test="userPk != null  and userPk != ''">#{userPk},</if>
+                    <if test="offestAmount != null ">#{offestAmount},</if>
+                    <if test="reversion != null  and reversion != ''">#{reversion},</if>
+                    <if test="createBy != null  and createBy != ''">#{createBy},</if>
+                    <if test="createTime != null  and createTime != ''">#{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+                    <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+                    <if test="no1 != null  and no1 != ''">#{no1},</if>
+                    <if test="no2 != null  and no2 != ''">#{no2},</if>
+                    <if test="no3 != null  and no3 != ''">#{no3},</if>
+                    <if test="no4 != null  and no4 != ''">#{no4},</if>
+                    <if test="no5 != null  and no5 != ''">#{no5},</if>
+                    <if test="no6 != null  and no6 != ''">#{no6},</if>
+                    <if test="no7 != null  and no7 != ''">#{no7},</if>
+                    <if test="no8 != null  and no8 != ''">#{no8},</if>
+                    <if test="no9 != null  and no9 != ''">#{no9},</if>
+                    <if test="no10 != null  and no10 != ''">#{no10},</if>
+                    <if test="no11 != null  and no11 != ''">#{no11},</if>
+                    <if test="no12 != null  and no12 != ''">#{no12},</if>
+                    <if test="no13 != null  and no13 != ''">#{no13},</if>
+                    <if test="no14 != null  and no14 != ''">#{no14},</if>
+                    <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussUserOffest" parameterType="com.cms.buss_service.offset.domain.BussUserOffest">
+        UPDATE buss_user_offest
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="userPk != null  and userPk != ''">user_pk = #{userPk},</if>
+                    <if test="offestAmount != null ">offest_amount = #{offestAmount},</if>
+                    <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+                    <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+                    <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+                    <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+                    <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+                    <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+                    <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+                    <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+                    <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+                    <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+                    <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+                    <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+                    <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+                    <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+                    <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+                    <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+                    <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+                    <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussUserOffestById" parameterType="String">
+        DELETE FROM buss_user_offest WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussUserOffestByIds" parameterType="String">
+        DELETE FROM buss_user_offest WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

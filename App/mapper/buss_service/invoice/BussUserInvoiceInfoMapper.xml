@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.invoice.mapper.BussUserInvoiceInfoMapper">
+
+    <resultMap type="com.cms.buss_service.invoice.domain.BussUserInvoiceInfo" id="BussUserInvoiceInfoResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="txtype" column="txtype"/>
+        <result property="hdtype" column="hdtype"/>
+        <result property="tname" column="tname"/>
+        <result property="taxno" column="taxno"/>
+        <result property="taxpad" column="taxpad"/>
+        <result property="taxaccount" column="taxaccount"/>
+        <result property="defaultd" column="defaultd"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+    </resultMap>
+
+    <sql id="selectBussUserInvoiceInfoVo">
+        SELECT fo.id, fo.user_id, fo.group_id, fo.txtype, fo.hdtype, fo.tname, fo.taxno, fo.taxpad, fo.taxaccount, fo.defaultd, fo.email, fo.address, fo.reversion, fo.create_by, fo.create_time, fo.update_by, fo.update_time, fo.no1, fo.no2, fo.no3, fo.no4, fo.no5, fo.no6, fo.no7, fo.no8, fo.no9, fo.no10, fo.no11, fo.no12, fo.no13, fo.no14, fo.no15
+        FROM buss_user_invoice_info AS fo
+        LEFT JOIN sys_user u ON u.user_id  =  fo.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussUserInvoiceInfoList" parameterType="com.cms.buss_service.invoice.domain.BussUserInvoiceInfo"
+            resultMap="BussUserInvoiceInfoResult">
+        <include refid="selectBussUserInvoiceInfoVo"/>
+        <where>
+            1 = 1 AND fo.no1 = 'N'
+            <if test="userId != null  and userId != ''">AND fo.user_id = #{userId}</if>
+            <if test="groupId != null  and groupId != ''">AND fo.group_id = #{groupId}</if>
+            <if test="txtype != null  and txtype != ''">AND fo.txtype = #{txtype}</if>
+            <if test="hdtype != null  and hdtype != ''">AND fo.hdtype = #{hdtype}</if>
+            <if test="tname != null  and tname != ''">AND fo.tname like concat('%', #{tname}, '%')</if>
+            <if test="taxno != null  and taxno != ''">AND fo.taxno = #{taxno}</if>
+            <if test="taxpad != null  and taxpad != ''">AND fo.taxpad = #{taxpad}</if>
+            <if test="taxaccount != null  and taxaccount != ''">AND fo.taxaccount = #{taxaccount}</if>
+            <if test="defaultd != null  and defaultd != ''">AND fo.defaultd = #{defaultd}</if>
+            <if test="email != null  and email != ''">AND fo.email = #{email}</if>
+            <if test="address != null  and address != ''">AND fo.address = #{address}</if>
+            <if test="reversion != null  and reversion != ''">AND fo.reversion = #{reversion}</if>
+            <if test="no2 != null  and no2 != ''">AND fo.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND fo.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND fo.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND fo.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND fo.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND fo.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND fo.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND fo.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND fo.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''">AND fo.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''">AND fo.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''">AND fo.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''">AND fo.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''">AND fo.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY fo.create_time DESC
+    </select>
+
+    <select id="selectBussUserInvoiceInfoById" parameterType="Long" resultMap="BussUserInvoiceInfoResult">
+        <include refid="selectBussUserInvoiceInfoVo"/>
+        WHERE fo.id = #{id}
+    </select>
+
+    <insert id="insertBussUserInvoiceInfo" parameterType="com.cms.buss_service.invoice.domain.BussUserInvoiceInfo">
+        INSERT INTO buss_user_invoice_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="userId != null  and userId != ''">user_id,</if>
+            <if test="groupId != null  and groupId != ''">group_id,</if>
+            <if test="txtype != null  and txtype != ''">txtype,</if>
+            <if test="hdtype != null  and hdtype != ''">hdtype,</if>
+            <if test="tname != null  and tname != ''">tname,</if>
+            <if test="taxno != null  and taxno != ''">taxno,</if>
+            <if test="taxpad != null  and taxpad != ''">taxpad,</if>
+            <if test="taxaccount != null  and taxaccount != ''">taxaccount,</if>
+            <if test="defaultd != null  and defaultd != ''">defaultd,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="address != null  and address != ''">address,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            <if test="groupId != null  and groupId != ''">#{groupId},</if>
+            <if test="txtype != null  and txtype != ''">#{txtype},</if>
+            <if test="hdtype != null  and hdtype != ''">#{hdtype},</if>
+            <if test="tname != null  and tname != ''">#{tname},</if>
+            <if test="taxno != null  and taxno != ''">#{taxno},</if>
+            <if test="taxpad != null  and taxpad != ''">#{taxpad},</if>
+            <if test="taxaccount != null  and taxaccount != ''">#{taxaccount},</if>
+            <if test="defaultd != null  and defaultd != ''">#{defaultd},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="address != null  and address != ''">#{address},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussUserInvoiceInfo" parameterType="com.cms.buss_service.invoice.domain.BussUserInvoiceInfo">
+        UPDATE buss_user_invoice_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+            <if test="groupId != null  and groupId != ''">group_id = #{groupId},</if>
+            <if test="txtype != null  and txtype != ''">txtype = #{txtype},</if>
+            <if test="hdtype != null  and hdtype != ''">hdtype = #{hdtype},</if>
+            <if test="tname != null  and tname != ''">tname = #{tname},</if>
+            <if test="taxno != null  and taxno != ''">taxno = #{taxno},</if>
+            <if test="taxpad != null  and taxpad != ''">taxpad = #{taxpad},</if>
+            <if test="taxaccount != null  and taxaccount != ''">taxaccount = #{taxaccount},</if>
+            <if test="defaultd != null  and defaultd != ''">defaultd = #{defaultd},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="address != null  and address != ''">address = #{address},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussUserInvoiceInfoById" parameterType="Long">
+        <!-- DELETE FROM buss_user_invoice_info WHERE id = #{id}-->
+        UPDATE buss_user_invoice_info SET no1 = 'Y' WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussUserInvoiceInfoByIds" parameterType="String">
+        <!-- DELETE FROM buss_user_invoice_info WHERE id in-->
+        UPDATE buss_user_invoice_info SET no1 = 'Y' WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.product.mapper.BussProductBrandMapper">
+
+    <resultMap type="com.cms.buss_service.product.domain.BussProductBrand" id="BussProductBrandResult">
+        <result property="pk" column="pk"/>
+        <result property="stationId" column="station_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="brandDesc" column="brand_desc"/>
+        <result property="brandLink" column="brand_link"/>
+        <result property="brandImages" column="brand_images"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+    </resultMap>
+
+    <resultMap type="com.cms.buss_service.product.domain.BussProductBrandVo" id="BussProductBrandResultVos">
+        <result property="pk" column="pk"/>
+        <result property="stationId" column="station_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="brandDesc" column="brand_desc"/>
+        <result property="brandLink" column="brand_link"/>
+        <result property="brandImages" column="brand_images"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+       
+    </resultMap>
+
+    <select id="queryBrandProduct" resultMap="com.cms.buss_service.product.mapper.BussProductInfoMapper.BussProductInfoResultVos">
+        select * from buss_product_info ss
+        where
+        ss.product_brand=#{pk}
+    </select>
+
+    <select id="selectBrandChildProduct" parameterType="com.cms.buss_service.product.domain.BussProductBrandVo"
+            resultMap="BussProductBrandResultVos">
+        SELECT
+        nd.pk,
+        nd.station_id,
+        nd.brand_name,
+        nd.brand_desc
+        FROM buss_product_brand AS nd
+        LEFT JOIN sys_user u ON u.user_id  =  nd.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+        <where>
+            1 = 1
+            <if test="stationId != null  and stationId != ''">AND nd.station_id= #{stationId}</if>
+            <if test="brandName != null  and brandName != ''">AND nd.brand_name like concat('%', #{brandName}, '%')</if>
+            <if test="brandDesc != null  and brandDesc != ''">AND nd.brand_desc = #{brandDesc}</if>
+            <if test="brandLink != null  and brandLink != ''">AND nd.brand_link = #{brandLink}</if>
+            <if test="brandImages != null  and brandImages != ''">AND nd.brand_images = #{brandImages}</if>
+            <if test="reversion != null  and reversion != ''">AND nd.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''">AND nd.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND nd.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND nd.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND nd.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND nd.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND nd.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND nd.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND nd.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND nd.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND nd.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''">AND nd.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''">AND nd.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''">AND nd.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''">AND nd.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''">AND nd.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY nd.create_time DESC
+    </select>
+
+    <sql id="selectBussProductBrandVo">
+        SELECT nd.pk,nd.station_id, nd.brand_name, nd.brand_desc,
+        nd.brand_link, nd.brand_images, nd.reversion, nd.create_by,
+        nd.create_time, nd.update_by, nd.update_time, nd.no1, nd.no2, nd.no3,
+        nd.no4, nd.no5, nd.no6, nd.no7, nd.no8, nd.no9, nd.no10, nd.no11,
+        nd.no12, nd.no13, nd.no14, nd.no15
+        FROM buss_product_brand AS nd
+        LEFT JOIN sys_user u ON u.user_id  =  nd.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussProductBrandList" parameterType="com.cms.buss_service.product.domain.BussProductBrand"
+            resultMap="BussProductBrandResult">
+        <include refid="selectBussProductBrandVo"/>
+        <where>
+            1 = 1
+            <if test="stationId != null  and stationId != ''">AND nd.station_id= #{stationId}</if>
+            <if test="brandName != null  and brandName != ''">AND nd.brand_name like concat('%', #{brandName}, '%')</if>
+            <if test="brandDesc != null  and brandDesc != ''">AND nd.brand_desc = #{brandDesc}</if>
+            <if test="brandLink != null  and brandLink != ''">AND nd.brand_link = #{brandLink}</if>
+            <if test="brandImages != null  and brandImages != ''">AND nd.brand_images = #{brandImages}</if>
+            <if test="reversion != null  and reversion != ''">AND nd.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''">AND nd.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND nd.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND nd.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND nd.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND nd.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND nd.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND nd.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND nd.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND nd.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND nd.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''">AND nd.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''">AND nd.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''">AND nd.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''">AND nd.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''">AND nd.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY nd.create_time DESC
+    </select>
+
+    <select id="selectBussProductBrandById" parameterType="Long" resultMap="BussProductBrandResult">
+       select  * from buss_product_brand nd
+        WHERE nd.pk = #{pk}
+    </select>
+
+    <insert id="insertBussProductBrand" parameterType="com.cms.buss_service.product.domain.BussProductBrand"
+            useGeneratedKeys="true" keyProperty="pk">
+        INSERT INTO buss_product_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stationId != null  and stationId != ''">station_id,</if>
+            <if test="brandName != null  and brandName != ''">brand_name,</if>
+            <if test="brandDesc != null  and brandDesc != ''">brand_desc,</if>
+            <if test="brandLink != null  and brandLink != ''">brand_link,</if>
+            <if test="brandImages != null  and brandImages != ''">brand_images,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stationId != null  and stationId != ''">#{stationId},</if>
+            <if test="brandName != null  and brandName != ''">#{brandName},</if>
+            <if test="brandDesc != null  and brandDesc != ''">#{brandDesc},</if>
+            <if test="brandLink != null  and brandLink != ''">#{brandLink},</if>
+            <if test="brandImages != null  and brandImages != ''">#{brandImages},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussProductBrand" parameterType="com.cms.buss_service.product.domain.BussProductBrand">
+        UPDATE buss_product_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stationId != null  and stationId != ''">station_id = #{stationId},</if>
+            <if test="brandName != null  and brandName != ''">brand_name = #{brandName},</if>
+            <if test="brandDesc != null  and brandDesc != ''">brand_desc = #{brandDesc},</if>
+            <if test="brandLink != null  and brandLink != ''">brand_link = #{brandLink},</if>
+            <if test="brandImages != null  and brandImages != ''">brand_images = #{brandImages},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussProductBrandById" parameterType="Long">
+        DELETE FROM buss_product_brand WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussProductBrandByIds" parameterType="String">
+        DELETE FROM buss_product_brand WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

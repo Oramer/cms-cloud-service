@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.coupon.mapper.BussCouponMapper">
+
+    <resultMap type="com.cms.buss_service.coupon.domain.BussCoupon" id="BussCouponResult">
+        <result property="pk" column="pk"/>
+        <result property="userRange" column="user_range"/>
+        <result property="couponType" column="coupon_type"/>
+        <result property="title" column="title"/>
+        <result property="money" column="money"/>
+        <result property="threshold" column="threshold"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="validOrNot" column="valid_or_not"/>
+        <result property="quantity" column="quantity"/>
+        <result property="scopeOfUses" column="scope_of_uses"/>
+        <result property="revision" column="revision"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+        <result property="no16" column="no16"/>
+        <result property="no17" column="no17"/>
+        <result property="no18" column="no18"/>
+        <result property="no19" column="no19"/>
+        <result property="no20" column="no20"/>
+    </resultMap>
+
+    <sql id="selectBussCouponVo">
+        SELECT co.pk, co.user_range,
+        co.coupon_type,
+        co.no1,
+        co.title, co.money, co.threshold, co.start_date, co.end_date,
+        co.valid_or_not,
+        (case valid_or_not when 'Y' then '是' else '否' end ) as no2,
+        co.quantity, co.scope_of_uses, co.revision,
+        co.create_by, co.create_time, co.update_by, co.update_time,
+        co.no3, co.no4, co.no5, co.no6, co.no7, co.no8,
+        co.no9, co.no10, co.no11, co.no12, co.no13, co.no14,
+        co.no15, co.no16, co.no17, co.no18, co.no19, co.no20
+        FROM buss_coupon AS co
+        LEFT JOIN sys_user u ON u.user_id  =  co.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussCouponList" parameterType="com.cms.buss_service.coupon.domain.BussCoupon"
+            resultMap="BussCouponResult">
+        <include refid="selectBussCouponVo"/>
+        <where>
+            1 = 1
+            <if test="userRange != null  and userRange != ''">AND co.user_range = #{userRange}</if>
+            <if test="couponType != null  and couponType != ''">AND co.coupon_type = #{couponType}</if>
+            <if test="title != null  and title != ''">AND co.title like concat('%',#{title},'%')</if>
+            <if test="money != null  and money != ''">AND co.money = #{money}</if>
+            <if test="threshold != null  and threshold != ''">AND co.threshold = #{threshold}</if>
+            <if test="startDate != null  and startDate != ''">AND co.start_date = #{startDate}</if>
+            <if test="endDate != null  and endDate != ''">AND co.end_date = #{endDate}</if>
+            <if test="validOrNot != null  and validOrNot != ''">AND co.valid_or_not = #{validOrNot}</if>
+            <if test="quantity != null  and quantity != ''">AND co.quantity = #{quantity}</if>
+            <if test="scopeOfUses != null  and scopeOfUses != ''">AND co.scope_of_uses like
+                concat('%',#{scopeOfUses},'%')
+            </if>
+            <if test="revision != null  and revision != ''">AND co.revision = #{revision}</if>
+            <if test="no1 != null  and no1 != ''">AND co.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND co.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND co.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND co.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND co.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND co.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND co.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND co.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND co.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND co.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''">AND co.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''">AND co.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''">AND co.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''">AND co.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''">AND co.no15 = #{no15}</if>
+            <if test="no16 != null  and no16 != ''">AND co.no16 = #{no16}</if>
+            <if test="no17 != null  and no17 != ''">AND co.no17 = #{no17}</if>
+            <if test="no18 != null  and no18 != ''">AND co.no18 = #{no18}</if>
+            <if test="no19 != null  and no19 != ''">AND co.no19 = #{no19}</if>
+            <if test="no20 != null  and no20 != ''">AND co.no20 = #{no20}</if>
+        </where>
+        ${dataScope}
+        ORDER BY co.create_time DESC
+    </select>
+
+    <select id="selectBussCouponById" parameterType="String" resultMap="BussCouponResult">
+        <include refid="selectBussCouponVo"/>
+        WHERE co.pk = #{pk}
+    </select>
+
+    <insert id="insertBussCoupon" parameterType="com.cms.buss_service.coupon.domain.BussCoupon">
+        INSERT INTO buss_coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">pk,</if>
+            <if test="userRange != null  and userRange != ''">user_range,</if>
+            <if test="couponType != null  and couponType != ''">coupon_type,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="money != null  and money != ''">money,</if>
+            <if test="threshold != null  and threshold != ''">threshold,</if>
+            <if test="startDate != null  and startDate != ''">start_date,</if>
+            <if test="endDate != null  and endDate != ''">end_date,</if>
+            <if test="validOrNot != null  and validOrNot != ''">valid_or_not,</if>
+            <if test="quantity != null  and quantity != ''">quantity,</if>
+            <if test="scopeOfUses != null  and scopeOfUses != ''">scope_of_uses,</if>
+            <if test="revision != null  and revision != ''">revision,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+            <if test="no16 != null  and no16 != ''">no16,</if>
+            <if test="no17 != null  and no17 != ''">no17,</if>
+            <if test="no18 != null  and no18 != ''">no18,</if>
+            <if test="no19 != null  and no19 != ''">no19,</if>
+            <if test="no20 != null  and no20 != ''">no20,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">#{pk},</if>
+            <if test="userRange != null  and userRange != ''">#{userRange},</if>
+            <if test="couponType != null  and couponType != ''">#{couponType},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="money != null  and money != ''">#{money},</if>
+            <if test="threshold != null  and threshold != ''">#{threshold},</if>
+            <if test="startDate != null  and startDate != ''">#{startDate},</if>
+            <if test="endDate != null  and endDate != ''">#{endDate},</if>
+            <if test="validOrNot != null  and validOrNot != ''">#{validOrNot},</if>
+            <if test="quantity != null  and quantity != ''">#{quantity},</if>
+            <if test="scopeOfUses != null  and scopeOfUses != ''">#{scopeOfUses},</if>
+            <if test="revision != null  and revision != ''">#{revision},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+            <if test="no16 != null  and no16 != ''">#{no16},</if>
+            <if test="no17 != null  and no17 != ''">#{no17},</if>
+            <if test="no18 != null  and no18 != ''">#{no18},</if>
+            <if test="no19 != null  and no19 != ''">#{no19},</if>
+            <if test="no20 != null  and no20 != ''">#{no20},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussCoupon" parameterType="com.cms.buss_service.coupon.domain.BussCoupon">
+        UPDATE buss_coupon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userRange != null  and userRange != ''">user_range = #{userRange},</if>
+            <if test="couponType != null  and couponType != ''">coupon_type = #{couponType},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="money != null  and money != ''">money = #{money},</if>
+            <if test="threshold != null  and threshold != ''">threshold = #{threshold},</if>
+            <if test="startDate != null  and startDate != ''">start_date = #{startDate},</if>
+            <if test="endDate != null  and endDate != ''">end_date = #{endDate},</if>
+            <if test="validOrNot != null  and validOrNot != ''">valid_or_not = #{validOrNot},</if>
+            <if test="quantity != null  and quantity != ''">quantity = #{quantity},</if>
+            <if test="scopeOfUses != null  and scopeOfUses != ''">scope_of_uses = #{scopeOfUses},</if>
+            <if test="revision != null  and revision != ''">revision = #{revision},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+            <if test="no16 != null  and no16 != ''">no16 = #{no16},</if>
+            <if test="no17 != null  and no17 != ''">no17 = #{no17},</if>
+            <if test="no18 != null  and no18 != ''">no18 = #{no18},</if>
+            <if test="no19 != null  and no19 != ''">no19 = #{no19},</if>
+            <if test="no20 != null  and no20 != ''">no20 = #{no20},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussCouponById" parameterType="String">
+        DELETE FROM buss_coupon WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussCouponByIds" parameterType="String">
+        DELETE FROM buss_coupon WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

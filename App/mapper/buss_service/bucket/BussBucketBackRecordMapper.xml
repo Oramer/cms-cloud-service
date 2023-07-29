@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.bucket.mapper.BussBucketBackRecordMapper">
+
+    <resultMap type="com.cms.buss_service.bucket.domain.BussBucketBackRecord" id="BussBucketBackRecordResult">
+        <result property="pk" column="pk"/>
+        <result property="posterPk" column="poster_pk"/>
+        <result property="orderPk" column="order_pk"/>
+        <result property="userPk" column="user_pk"/>
+        <result property="stationPk" column="station_pk"/>
+        <result property="productPk" column="product_pk"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="bucketCount" column="bucket_count"/>
+        <result property="bucketSinglePrice" column="bucket_single_price"/>
+        <result property="bucketTotalPrice" column="bucket_total_price"/>
+        <result property="opType" column="op_type"/>
+        <result property="status" column="status"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+    </resultMap>
+
+    <sql id="selectBussBucketBackRecordVo">
+        SELECT rd.pk,rd.poster_pk, rd.order_pk, rd.user_pk, rd.station_pk, rd.product_pk,
+        rd.brand_name, rd.bucket_count, rd.bucket_single_price, rd.bucket_total_price,
+        rd.op_type, rd.status, rd.reversion, rd.create_by, rd.create_time,
+        rd.update_by, rd.update_time, rd.no1, rd.no2, rd.no3, rd.no4, rd.no5,
+        rd.no6, rd.no7, rd.no8, rd.no9, rd.no10, rd.no11, rd.no12, rd.no13, rd.no14, rd.no15
+        FROM buss_bucket_back_record AS rd
+        LEFT JOIN sys_user u ON u.user_id  =  rd.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+        left join buss_product_brand  pb on pb.pk = rd.brand_name
+    </sql>
+
+    <select id="selectBussBucketBackRecordList" parameterType="com.cms.buss_service.bucket.domain.BussBucketBackRecord"
+            resultMap="BussBucketBackRecordResult">
+        <include refid="selectBussBucketBackRecordVo"/>
+        <where>
+            1 = 1
+            <if test="posterPk != null  and posterPk != ''">AND rd.poster_pk = #{posterPk}</if>
+            <if test="orderPk != null  and orderPk != ''">AND rd.order_pk = #{orderPk}</if>
+            <if test="userPk != null  and userPk != ''">AND rd.user_pk = #{userPk}</if>
+            <if test="stationPk != null  and stationPk != ''">AND rd.station_pk = #{stationPk}</if>
+            <if test="productPk != null  and productPk != ''">AND rd.product_pk = #{productPk}</if>
+            <if test="brandName != null  and brandName != ''">AND rd.brand_name like concat('%', #{brandName}, '%')</if>
+            <if test="bucketCount != null  and bucketCount != ''">AND rd.bucket_count = #{bucketCount}</if>
+            <if test="bucketSinglePrice != null ">AND rd.bucket_single_price = #{bucketSinglePrice}</if>
+            <if test="bucketTotalPrice != null ">AND rd.bucket_total_price = #{bucketTotalPrice}</if>
+            <if test="opType != null  and opType != ''">AND rd.op_type = #{opType}</if>
+            <if test="status != null  and status != ''">AND rd.status = #{status}</if>
+            <if test="reversion != null  and reversion != ''">AND rd.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''">AND rd.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND rd.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND rd.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND rd.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND rd.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND rd.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND rd.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND rd.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND rd.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND rd.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''">AND rd.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''">AND rd.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''">AND rd.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''">AND rd.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''">AND rd.no15 = #{no15}</if>
+        </where>
+        group by rd.brand_name
+        ${dataScope}
+        ORDER BY rd.create_time DESC
+    </select>
+
+    <select id="selectBussBucketBackRecordById" parameterType="Long" resultMap="BussBucketBackRecordResult">
+        <include refid="selectBussBucketBackRecordVo"/>
+        WHERE rd.pk = #{pk}
+    </select>
+
+    <insert id="insertBussBucketBackRecord" parameterType="com.cms.buss_service.bucket.domain.BussBucketBackRecord"
+            useGeneratedKeys="true" keyProperty="pk">
+        INSERT INTO buss_bucket_back_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="posterPk != null  and posterPk != ''">poster_pk,</if>
+            <if test="orderPk != null  and orderPk != ''">order_pk,</if>
+            <if test="userPk != null  and userPk != ''">user_pk,</if>
+            <if test="stationPk != null  and stationPk != ''">station_pk,</if>
+            <if test="productPk != null  and productPk != ''">product_pk,</if>
+            <if test="brandName != null  and brandName != ''">brand_name,</if>
+            <if test="bucketCount != null  and bucketCount != ''">bucket_count,</if>
+            <if test="bucketSinglePrice != null ">bucket_single_price,</if>
+            <if test="bucketTotalPrice != null ">bucket_total_price,</if>
+            <if test="opType != null  and opType != ''">op_type,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="posterPk != null  and posterPk != ''">#{posterPk},</if>
+            <if test="orderPk != null  and orderPk != ''">#{orderPk},</if>
+            <if test="userPk != null  and userPk != ''">#{userPk},</if>
+            <if test="stationPk != null  and stationPk != ''">#{stationPk},</if>
+            <if test="productPk != null  and productPk != ''">#{productPk},</if>
+            <if test="brandName != null  and brandName != ''">#{brandName},</if>
+            <if test="bucketCount != null  and bucketCount != ''">#{bucketCount},</if>
+            <if test="bucketSinglePrice != null ">#{bucketSinglePrice},</if>
+            <if test="bucketTotalPrice != null ">#{bucketTotalPrice},</if>
+            <if test="opType != null  and opType != ''">#{opType},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussBucketBackRecord" parameterType="com.cms.buss_service.bucket.domain.BussBucketBackRecord">
+        UPDATE buss_bucket_back_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="posterPk != null  and posterPk != ''">poster_pk= #{posterPk},</if>
+            <if test="orderPk != null  and orderPk != ''">order_pk = #{orderPk},</if>
+            <if test="userPk != null  and userPk != ''">user_pk = #{userPk},</if>
+            <if test="stationPk != null  and stationPk != ''">station_pk = #{stationPk},</if>
+            <if test="productPk != null  and productPk != ''">product_pk = #{productPk},</if>
+            <if test="brandName != null  and brandName != ''">brand_name = #{brandName},</if>
+            <if test="bucketCount != null  and bucketCount != ''">bucket_count = #{bucketCount},</if>
+            <if test="bucketSinglePrice != null ">bucket_single_price = #{bucketSinglePrice},</if>
+            <if test="bucketTotalPrice != null ">bucket_total_price = #{bucketTotalPrice},</if>
+            <if test="opType != null  and opType != ''">op_type = #{opType},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussBucketBackRecordById" parameterType="Long">
+        DELETE FROM buss_bucket_back_record WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussBucketBackRecordByIds" parameterType="String">
+        DELETE FROM buss_bucket_back_record WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

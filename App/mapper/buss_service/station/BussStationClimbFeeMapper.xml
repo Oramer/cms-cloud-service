@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.station.mapper.BussStationClimbFeeMapper">
+
+    <resultMap type="com.cms.buss_service.station.domain.BussStationClimbFee" id="BussStationClimbFeeResult">
+        <result property="pk"    column="pk"    />
+        <result property="stationPk"    column="station_pk"    />
+        <result property="f1"    column="f1"    />
+        <result property="f2"    column="f2"    />
+        <result property="f3"    column="f3"    />
+        <result property="f4"    column="f4"    />
+        <result property="f5"    column="f5"    />
+        <result property="f6"    column="f6"    />
+        <result property="f7"    column="f7"    />
+        <result property="reversion"    column="reversion"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="no1"    column="no1"    />
+        <result property="no2"    column="no2"    />
+        <result property="no3"    column="no3"    />
+        <result property="no4"    column="no4"    />
+        <result property="no5"    column="no5"    />
+        <result property="no6"    column="no6"    />
+        <result property="no7"    column="no7"    />
+        <result property="no8"    column="no8"    />
+        <result property="no9"    column="no9"    />
+        <result property="no10"    column="no10"    />
+        <result property="no11"    column="no11"    />
+        <result property="no12"    column="no12"    />
+        <result property="no13"    column="no13"    />
+        <result property="no14"    column="no14"    />
+        <result property="no15"    column="no15"    />
+    </resultMap>
+
+    <sql id="selectBussStationClimbFeeVo">
+        SELECT ee.pk, ee.station_pk, ee.f1, ee.f2, ee.f3, ee.f4, ee.f5, ee.f6, ee.f7, ee.reversion, ee.create_by, ee.create_time, ee.update_by, ee.update_time, ee.no1, ee.no2, ee.no3, ee.no4, ee.no5, ee.no6, ee.no7, ee.no8, ee.no9, ee.no10, ee.no11, ee.no12, ee.no13, ee.no14, ee.no15
+        FROM buss_station_climb_fee AS ee
+        LEFT JOIN sys_user u ON u.user_id  =  ee.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussStationClimbFeeList" parameterType="com.cms.buss_service.station.domain.BussStationClimbFee" resultMap="BussStationClimbFeeResult">
+        <include refid="selectBussStationClimbFeeVo"/>
+        <where>
+            1 = 1
+            <if test="stationPk != null  and stationPk != ''"> AND ee.station_pk = #{stationPk}</if>
+            <if test="f1 != null  and f1 != ''"> AND ee.f1 = #{f1}</if>
+            <if test="f2 != null "> AND ee.f2 = #{f2}</if>
+            <if test="f3 != null "> AND ee.f3 = #{f3}</if>
+            <if test="f4 != null "> AND ee.f4 = #{f4}</if>
+            <if test="f5 != null "> AND ee.f5 = #{f5}</if>
+            <if test="f6 != null "> AND ee.f6 = #{f6}</if>
+            <if test="f7 != null "> AND ee.f7 = #{f7}</if>
+            <if test="reversion != null  and reversion != ''"> AND ee.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''"> AND ee.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''"> AND ee.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''"> AND ee.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''"> AND ee.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''"> AND ee.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''"> AND ee.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''"> AND ee.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''"> AND ee.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''"> AND ee.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''"> AND ee.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''"> AND ee.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''"> AND ee.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''"> AND ee.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''"> AND ee.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''"> AND ee.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY ee.create_time DESC
+    </select>
+
+    <select id="selectBussStationClimbFeeById" parameterType="String" resultMap="BussStationClimbFeeResult">
+        <include refid="selectBussStationClimbFeeVo"/>
+        WHERE ee.pk = #{pk}
+    </select>
+    <select id="queryClimbFeeByStationPk" resultMap="BussStationClimbFeeResult">
+        <include refid="selectBussStationClimbFeeVo"/>
+        WHERE ee.station_pk = #{stationPk}
+    </select>
+
+    <insert id="insertBussStationClimbFee" parameterType="com.cms.buss_service.station.domain.BussStationClimbFee">
+        INSERT INTO buss_station_climb_fee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">pk,</if>
+            <if test="stationPk != null  and stationPk != ''">station_pk,</if>
+            <if test="f1 != null  and f1 != ''">f1,</if>
+            <if test="f2 != null ">f2,</if>
+            <if test="f3 != null ">f3,</if>
+            <if test="f4 != null ">f4,</if>
+            <if test="f5 != null ">f5,</if>
+            <if test="f6 != null ">f6,</if>
+            <if test="f7 != null ">f7,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">#{pk},</if>
+            <if test="stationPk != null  and stationPk != ''">#{stationPk},</if>
+            <if test="f1 != null  and f1 != ''">#{f1},</if>
+            <if test="f2 != null ">#{f2},</if>
+            <if test="f3 != null ">#{f3},</if>
+            <if test="f4 != null ">#{f4},</if>
+            <if test="f5 != null ">#{f5},</if>
+            <if test="f6 != null ">#{f6},</if>
+            <if test="f7 != null ">#{f7},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussStationClimbFee" parameterType="com.cms.buss_service.station.domain.BussStationClimbFee">
+        UPDATE buss_station_climb_fee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stationPk != null  and stationPk != ''">station_pk = #{stationPk},</if>
+            <if test="f1 != null  and f1 != ''">f1 = #{f1},</if>
+            <if test="f2 != null ">f2 = #{f2},</if>
+            <if test="f3 != null ">f3 = #{f3},</if>
+            <if test="f4 != null ">f4 = #{f4},</if>
+            <if test="f5 != null ">f5 = #{f5},</if>
+            <if test="f6 != null ">f6 = #{f6},</if>
+            <if test="f7 != null ">f7 = #{f7},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussStationClimbFeeById" parameterType="String">
+        DELETE FROM buss_station_climb_fee WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussStationClimbFeeByIds" parameterType="String">
+        DELETE FROM buss_station_climb_fee WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.order.mapper.BussOrderReminderMapper">
+
+    <resultMap type="com.cms.buss_service.order.domain.BussOrderReminder" id="BussOrderReminderResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="no1"    column="no1"    />
+        <result property="no2"    column="no2"    />
+        <result property="no3"    column="no3"    />
+        <result property="no4"    column="no4"    />
+        <result property="no5"    column="no5"    />
+    </resultMap>
+
+    <sql id="selectBussOrderReminderVo">
+        SELECT er.id, er.order_id, er.create_by, er.create_time, er.update_by, er.update_time, er.no1, er.no2, er.no3, er.no4, er.no5        FROM buss_order_reminder AS er
+        LEFT JOIN sys_user u ON u.user_id  =  er.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussOrderReminderList" parameterType="com.cms.buss_service.order.domain.BussOrderReminder" resultMap="BussOrderReminderResult">
+        <include refid="selectBussOrderReminderVo"/>
+        <where>
+            1 = 1
+            <if test="orderId != null "> AND er.order_id = #{orderId}</if>
+            <if test="no1 != null  and no1 != ''"> AND er.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''"> AND er.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''"> AND er.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''"> AND er.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''"> AND er.no5 = #{no5}</if>
+        </where>
+        ${dataScope}
+    </select>
+
+    <select id="selectBussOrderReminderById" parameterType="Long" resultMap="BussOrderReminderResult">
+        <include refid="selectBussOrderReminderVo"/>
+        WHERE er.id = #{id}
+    </select>
+
+    <insert id="insertBussOrderReminder" parameterType="com.cms.buss_service.order.domain.BussOrderReminder" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_order_reminder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null ">order_id,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null ">#{orderId},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussOrderReminder" parameterType="com.cms.buss_service.order.domain.BussOrderReminder">
+        UPDATE buss_order_reminder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null ">order_id = #{orderId},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussOrderReminderById" parameterType="Long">
+        DELETE FROM buss_order_reminder WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussOrderReminderByIds" parameterType="String">
+        DELETE FROM buss_order_reminder WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

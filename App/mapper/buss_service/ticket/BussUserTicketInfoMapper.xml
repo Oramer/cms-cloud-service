@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.ticket.mapper.BussUserTicketInfoMapper">
+
+    <resultMap type="com.cms.buss_service.ticket.domain.BussUserTicketInfo" id="BussUserTicketInfoResult">
+        <result property="pk"    column="pk"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productBrand"    column="product_brand"    />
+        <result property="ticketId"    column="ticket_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="ticketAccount"    column="ticket_account"    />
+        <result property="sourceType"    column="source_type"    />
+        <result property="getTime"    column="get_time"    />
+        <result property="expiredTime"    column="expired_time"    />
+        <result property="isUsed"    column="is_used"    />
+        <result property="reversion"    column="reversion"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="no1"    column="no1"    />
+        <result property="no2"    column="no2"    />
+        <result property="no3"    column="no3"    />
+        <result property="no4"    column="no4"    />
+        <result property="no5"    column="no5"    />
+        <result property="no6"    column="no6"    />
+        <result property="no7"    column="no7"    />
+        <result property="no8"    column="no8"    />
+        <result property="no9"    column="no9"    />
+        <result property="no10"    column="no10"    />
+        <result property="no11"    column="no11"    />
+        <result property="no12"    column="no12"    />
+        <result property="no13"    column="no13"    />
+        <result property="no14"    column="no14"    />
+        <result property="no15"    column="no15"    />
+        <association property="info"  column="product_id" select="queryMyTicketProduct"/>
+        <association property="ticket"  column="ticket_id" select="queryMyTicketInfo"/>
+    </resultMap>
+
+    <sql id="selectBussUserTicketInfoVo">
+        SELECT fo.pk,fo.order_id,
+        fo.product_id, fo.product_brand,
+        fo.ticket_id, fo.user_id, fo.ticket_account, fo.source_type, fo.get_time,
+        fo.expired_time, fo.is_used, fo.reversion, fo.create_by, fo.create_time,
+        fo.update_by, fo.update_time, fo.no1, fo.no2, fo.no3, fo.no4, fo.no5,
+        fo.no6, fo.no7, fo.no8, fo.no9, fo.no10,
+        fo.no11, fo.no12, fo.no13,
+        fo.no14,
+        fo.no15
+        FROM buss_user_ticket_info AS fo
+        LEFT JOIN sys_user u ON u.user_id  =  fo.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+    <select id="queryYjGroupTicketInfo" resultType="com.cms.buss_service.ticket.domain.BussUserTicketInfo">
+        SELECT
+        fo.pk,fo.order_id,
+        fo.product_id, fo.product_brand,
+        fo.ticket_id, fo.user_id, fo.ticket_account, fo.source_type, fo.get_time,
+        fo.expired_time, fo.is_used, fo.reversion, fo.create_by, fo.create_time,
+        fo.update_by, fo.update_time, fo.no1, fo.no2, fo.no3, fo.no4, fo.no5,
+        fo.no6, fo.no7, fo.no8, fo.no9, fo.no10,
+        fo.no11, fo.no12, fo.no13,
+        fo.no14,
+        '月结水票' as no15
+        FROM buss_user_ticket_info fo WHERE
+        fo.user_id = (SELECT user_id from buss_monthly_user_details
+        where mouth_user_id=#{no15} and is_manger='1'  )
+    </select>
+    <select id="queryMyTicketProduct" resultMap="com.cms.buss_service.product.mapper.BussProductInfoMapper.BussProductInfoResult">
+        select  * from buss_product_info where pk = #{productPk}
+    </select>
+    <select id="queryMyTicketInfo" resultMap="com.cms.buss_service.ticket.mapper.BussTicketInfoMapper.BussTicketInfoResult">
+        select  * from buss_ticket_info where pk = #{ticketPk}
+    </select>
+
+    <select id="selectBussUserTicketInfoList" parameterType="com.cms.buss_service.ticket.domain.BussUserTicketInfo" resultMap="BussUserTicketInfoResult">
+        <include refid="selectBussUserTicketInfoVo"/>
+        <where>
+            1 = 1
+            <if test="orderId != null "> AND fo.order_id = #{orderId}</if>
+            <if test="productId != null "> AND fo.product_id = #{productId}</if>
+            <if test="productBrand != null  and productBrand != ''"> AND fo.product_brand = #{productBrand}</if>
+            <if test="ticketId != null  and ticketId != ''"> AND fo.ticket_id = #{ticketId}</if>
+            <if test="userId != null  and userId != ''"> AND fo.user_id = #{userId}</if>
+            <if test="ticketAccount != null  and ticketAccount != ''"> AND fo.ticket_account = #{ticketAccount}</if>
+            <if test="sourceType != null  and sourceType != ''"> AND fo.source_type = #{sourceType}</if>
+            <if test="getTime != null  and getTime != ''"> AND fo.get_time = #{getTime}</if>
+            <if test="expiredTime != null  and expiredTime != ''"> AND fo.expired_time = #{expiredTime}</if>
+            <if test="isUsed != null  and isUsed != ''"> AND fo.is_used = #{isUsed}</if>
+            <if test="reversion != null  and reversion != ''"> AND fo.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''"> AND fo.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''"> AND fo.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''"> AND fo.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''"> AND fo.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''"> AND fo.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''"> AND fo.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''"> AND fo.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''"> AND fo.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''"> AND fo.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''"> AND fo.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''"> AND fo.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''"> AND fo.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''"> AND fo.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''"> AND fo.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''"> AND fo.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY fo.create_time DESC
+    </select>
+
+    <select id="selectBussUserTicketInfoById" parameterType="Long" resultMap="BussUserTicketInfoResult">
+        <include refid="selectBussUserTicketInfoVo"/>
+        WHERE fo.pk = #{pk}
+    </select>
+
+    <insert id="insertBussUserTicketInfo" parameterType="com.cms.buss_service.ticket.domain.BussUserTicketInfo" useGeneratedKeys="true" keyProperty="pk">
+        INSERT INTO buss_user_ticket_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null ">order_id,</if>
+            <if test="productId != null ">product_id,</if>
+            <if test="productBrand != null  and productBrand != ''">product_brand,</if>
+            <if test="ticketId != null  and ticketId != ''">ticket_id,</if>
+            <if test="userId != null  and userId != ''">user_id,</if>
+            <if test="ticketAccount != null  and ticketAccount != ''">ticket_account,</if>
+            <if test="sourceType != null  and sourceType != ''">source_type,</if>
+            <if test="getTime != null  and getTime != ''">get_time,</if>
+            <if test="expiredTime != null  and expiredTime != ''">expired_time,</if>
+            <if test="isUsed != null  and isUsed != ''">is_used,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null ">#{orderId},</if>
+            <if test="productId != null ">#{productId},</if>
+            <if test="productBrand != null  and productBrand != ''">#{productBrand},</if>
+            <if test="ticketId != null  and ticketId != ''">#{ticketId},</if>
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            <if test="ticketAccount != null  and ticketAccount != ''">#{ticketAccount},</if>
+            <if test="sourceType != null  and sourceType != ''">#{sourceType},</if>
+            <if test="getTime != null  and getTime != ''">#{getTime},</if>
+            <if test="expiredTime != null  and expiredTime != ''">#{expiredTime},</if>
+            <if test="isUsed != null  and isUsed != ''">#{isUsed},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussUserTicketInfo" parameterType="com.cms.buss_service.ticket.domain.BussUserTicketInfo">
+        UPDATE buss_user_ticket_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null ">order_id = #{orderId},</if>
+            <if test="productId != null ">product_id = #{productId},</if>
+            <if test="productBrand != null  and productBrand != ''">product_brand = #{productBrand},</if>
+            <if test="ticketId != null  and ticketId != ''">ticket_id = #{ticketId},</if>
+            <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+            <if test="ticketAccount != null">ticket_account = #{ticketAccount},</if>
+            <if test="sourceType != null  and sourceType != ''">source_type = #{sourceType},</if>
+            <if test="getTime != null  and getTime != ''">get_time = #{getTime},</if>
+            <if test="expiredTime != null  and expiredTime != ''">expired_time = #{expiredTime},</if>
+            <if test="isUsed != null  and isUsed != ''">is_used = #{isUsed},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussUserTicketInfoById" parameterType="Long">
+        DELETE FROM buss_user_ticket_info WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussUserTicketInfoByIds" parameterType="String">
+        DELETE FROM buss_user_ticket_info WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

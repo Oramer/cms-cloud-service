@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.bucket.mapper.BussBucketInfoMapper">
+
+    <resultMap type="com.cms.buss_service.bucket.domain.BussBucketInfo" id="BussBucketInfoResult">
+        <result property="pk" column="pk"/>
+        <result property="recordType" column="record_type"/>
+        <result property="stationPk" column="station_pk"/>
+        <result property="posterPk" column="poster_pk"/>
+        <result property="userPk" column="user_pk"/>
+        <result property="orderPk" column="order_pk"/>
+        <result property="status" column="status"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <collection property="bds" column="pk"  select="queryBucketDetails"/>
+    </resultMap>
+
+    <sql id="selectBussBucketInfoVo">
+        SELECT rd.pk, rd.record_type, rd.station_pk, rd.poster_pk, rd.user_pk,
+        rd.order_pk, rd.status, rd.reversion, rd.create_by, rd.create_time, rd.update_by,
+        rd.update_time, rd.no1, rd.no2, rd.no3, rd.no4,
+        rd.no5, rd.no6, rd.no7, rd.no8,
+        rd.no9,
+        rd.no10,
+        (select ws.station_name from buss_water_station_info ws where ws.pk = rd.station_pk) as stationName,
+		(select CONCAT(nick_name,'|',phonenumber) from sys_user where user_id =  rd.user_pk ) as userName
+        FROM buss_bucket_info AS rd
+        LEFT JOIN sys_user u ON u.user_id  =  rd.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+    <select id="queryBucketDetails" resultType="com.cms.buss_service.bucket.domain.BussBucketDetails">
+        select * from buss_bucket_details where arecord_pk = #{infoPk}
+    </select>
+
+    <select id="selectInfoByOrderIdQt" resultMap="BussBucketInfoResult">
+        select * from buss_bucket_info where order_pk = #{orderPk} AND record_type = 1 AND status = 1
+    </select>
+
+    <select id="selectBussBucketInfoList" parameterType="com.cms.buss_service.bucket.domain.BussBucketInfo"
+            resultMap="BussBucketInfoResult">
+        <include refid="selectBussBucketInfoVo"/>
+        <where>
+            1 = 1
+            <if test="recordType != null  and recordType != ''">AND rd.record_type = #{recordType}</if>
+            <if test="stationPk != null  and stationPk != ''">AND rd.station_pk = #{stationPk}</if>
+            <if test="posterPk != null  and posterPk != ''">AND rd.poster_pk = #{posterPk}</if>
+            <if test="userPk != null  and userPk != ''">AND rd.user_pk = #{userPk}</if>
+            <if test="orderPk != null  and orderPk != ''">AND rd.order_pk = #{orderPk}</if>
+            <choose>
+                <when test="status != null  and status != ''">AND rd.status = #{status}</when>
+                <otherwise>AND FIND_IN_SET(rd.status,'1,2')</otherwise>
+            </choose>
+            <if test="reversion != null  and reversion != ''">AND rd.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''">AND rd.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND rd.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND rd.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND rd.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND rd.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND rd.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND rd.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND rd.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND rd.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND rd.no10 like concat('%',#{no10},'%')</if>
+        </where>
+        ${dataScope}
+        ORDER BY rd.create_time DESC
+    </select>
+
+    <select id="selectBussBucketInfoById" parameterType="String" resultMap="BussBucketInfoResult">
+        select   rd.*
+        FROM buss_bucket_info AS rd
+        LEFT JOIN sys_user u ON u.user_id  =  rd.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+        WHERE rd.pk = #{pk}
+    </select>
+
+    <insert id="insertBussBucketInfo" parameterType="com.cms.buss_service.bucket.domain.BussBucketInfo">
+        INSERT INTO buss_bucket_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">pk,</if>
+            <if test="recordType != null  and recordType != ''">record_type,</if>
+            <if test="stationPk != null  and stationPk != ''">station_pk,</if>
+            <if test="posterPk != null  and posterPk != ''">poster_pk,</if>
+            <if test="userPk != null  and userPk != ''">user_pk,</if>
+            <if test="orderPk != null  and orderPk != ''">order_pk,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">#{pk},</if>
+            <if test="recordType != null  and recordType != ''">#{recordType},</if>
+            <if test="stationPk != null  and stationPk != ''">#{stationPk},</if>
+            <if test="posterPk != null  and posterPk != ''">#{posterPk},</if>
+            <if test="userPk != null  and userPk != ''">#{userPk},</if>
+            <if test="orderPk != null  and orderPk != ''">#{orderPk},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussBucketInfo" parameterType="com.cms.buss_service.bucket.domain.BussBucketInfo">
+        UPDATE buss_bucket_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordType != null  and recordType != ''">record_type = #{recordType},</if>
+            <if test="stationPk != null  and stationPk != ''">station_pk = #{stationPk},</if>
+            <if test="posterPk != null  and posterPk != ''">poster_pk = #{posterPk},</if>
+            <if test="userPk != null  and userPk != ''">user_pk = #{userPk},</if>
+            <if test="orderPk != null  and orderPk != ''">order_pk = #{orderPk},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussBucketInfoById" parameterType="String">
+        DELETE FROM buss_bucket_info WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussBucketInfoByIds" parameterType="String">
+        DELETE FROM buss_bucket_info WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

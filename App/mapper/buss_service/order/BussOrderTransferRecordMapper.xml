@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.order.mapper.BussOrderTransferRecordMapper">
+
+    <resultMap type="com.cms.buss_service.order.domain.BussOrderTransferRecord" id="BussOrderTransferRecordResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="stationId"    column="station_id"    />
+        <result property="transferStationId"    column="transfer_station_id"    />
+        <result property="type"    column="type"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="no1"    column="no1"    />
+        <result property="no2"    column="no2"    />
+        <result property="no3"    column="no3"    />
+        <result property="no4"    column="no4"    />
+        <result property="no5"    column="no5"    />
+        <result property="no6"    column="no6"    />
+        <result property="no7"    column="no7"    />
+        <result property="no8"    column="no8"    />
+        <result property="no9"    column="no9"    />
+        <result property="no10"    column="no10"    />
+        <result property="no11"    column="no11"    />
+        <result property="no12"    column="no12"    />
+        <result property="no13"    column="no13"    />
+        <result property="no14"    column="no14"    />
+        <result property="no15"    column="no15"    />
+    </resultMap>
+
+    <sql id="selectBussOrderTransferRecordVo">
+        SELECT rd.id, rd.order_id, rd.station_id, rd.transfer_station_id, rd.type, rd.create_by, rd.create_time, rd.update_by, rd.update_time, rd.no1, rd.no2, rd.no3, rd.no4, rd.no5, rd.no6, rd.no7, rd.no8, rd.no9, rd.no10, rd.no11, rd.no12, rd.no13, rd.no14, rd.no15
+        FROM buss_order_transfer_record AS rd
+        LEFT JOIN sys_user u ON u.user_id  =  rd.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="queryOrderTransferSource" resultMap="BussOrderTransferRecordResult">
+        SELECT * from buss_order_transfer_record
+        where order_id = #{orderId}
+        order by create_time asc limit 1
+    </select>
+
+    <select id="selectBussOrderTransferRecordList" parameterType="com.cms.buss_service.order.domain.BussOrderTransferRecord" resultMap="BussOrderTransferRecordResult">
+        <include refid="selectBussOrderTransferRecordVo"/>
+        <where>
+            1 = 1
+            <if test="orderId != null  and orderId != ''"> AND rd.order_id = #{orderId}</if>
+            <if test="stationId != null  and stationId != ''"> AND rd.station_id = #{stationId}</if>
+            <if test="transferStationId != null  and transferStationId != ''"> AND rd.transfer_station_id = #{transferStationId}</if>
+            <if test="type != null  and type != ''"> AND rd.type = #{type}</if>
+            <if test="no1 != null  and no1 != ''"> AND rd.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''"> AND rd.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''"> AND rd.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''"> AND rd.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''"> AND rd.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''"> AND rd.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''"> AND rd.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''"> AND rd.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''"> AND rd.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''"> AND rd.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''"> AND rd.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''"> AND rd.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''"> AND rd.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''"> AND rd.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''"> AND rd.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY rd.create_time DESC
+    </select>
+
+    <select id="selectBussOrderTransferRecordById" parameterType="Long" resultMap="BussOrderTransferRecordResult">
+        <include refid="selectBussOrderTransferRecordVo"/>
+        WHERE rd.id = #{id}
+    </select>
+
+    <insert id="insertBussOrderTransferRecord" parameterType="com.cms.buss_service.order.domain.BussOrderTransferRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_order_transfer_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null  and orderId != ''">order_id,</if>
+            <if test="stationId != null  and stationId != ''">station_id,</if>
+            <if test="transferStationId != null  and transferStationId != ''">transfer_station_id,</if>
+            <if test="type != null  and type != ''">type,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null  and orderId != ''">#{orderId},</if>
+            <if test="stationId != null  and stationId != ''">#{stationId},</if>
+            <if test="transferStationId != null  and transferStationId != ''">#{transferStationId},</if>
+            <if test="type != null  and type != ''">#{type},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussOrderTransferRecord" parameterType="com.cms.buss_service.order.domain.BussOrderTransferRecord">
+        UPDATE buss_order_transfer_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null  and orderId != ''">order_id = #{orderId},</if>
+            <if test="stationId != null  and stationId != ''">station_id = #{stationId},</if>
+            <if test="transferStationId != null  and transferStationId != ''">transfer_station_id = #{transferStationId},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussOrderTransferRecordById" parameterType="Long">
+        DELETE FROM buss_order_transfer_record WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussOrderTransferRecordByIds" parameterType="String">
+        DELETE FROM buss_order_transfer_record WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

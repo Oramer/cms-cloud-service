@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.order.mapper.BussOrderProductInfoMapper">
+
+    <resultMap type="com.cms.buss_service.order.domain.BussOrderProductInfo" id="BussOrderProductInfoResult">
+            <result property="pk"    column="pk"    />
+            <result property="orderInfoPk"    column="order_info_pk"    />
+            <result property="productPk"    column="product_pk"    />
+            <result property="productAmount"    column="product_amount"    />
+            <result property="productSignPrice"    column="product_sign_price"    />
+            <result property="productFavorablePrice"    column="product_favorable_price"    />
+            <result property="amountPrice"    column="amount_price"    />
+            <result property="reducePrice"    column="reduce_price"    />
+            <result property="realPrice"    column="real_price"    />
+            <result property="snapshot"    column="snapshot"    />
+            <result property="reversion"    column="reversion"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="no1"    column="no1"    />
+            <result property="no2"    column="no2"    />
+            <result property="no3"    column="no3"    />
+            <result property="no4"    column="no4"    />
+            <result property="no5"    column="no5"    />
+            <result property="no6"    column="no6"    />
+            <result property="no7"    column="no7"    />
+            <result property="no8"    column="no8"    />
+            <result property="no9"    column="no9"    />
+            <result property="no10"    column="no10"    />
+            <result property="no11"    column="no11"    />
+            <result property="no12"    column="no12"    />
+            <result property="no13"    column="no13"    />
+            <result property="no14"    column="no14"    />
+            <result property="no15no8"    column="no15no8"    />
+    </resultMap>
+
+    <sql id="selectBussOrderProductInfoVo">
+        SELECT fo.pk, fo.order_info_pk, fo.product_pk, fo.product_amount, fo.product_sign_price, fo.product_favorable_price, fo.amount_price, fo.reduce_price, fo.real_price, fo.snapshot, fo.reversion, fo.create_by, fo.create_time, fo.update_by, fo.update_time, fo.no1, fo.no2, fo.no3, fo.no4, fo.no5, fo.no6, fo.no7, fo.no8, fo.no9, fo.no10, fo.no11, fo.no12, fo.no13, fo.no14, fo.no15no8
+        FROM buss_order_product_info AS fo
+        LEFT JOIN sys_user u ON u.user_id  =  fo.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+    <select id="queryOrderProductCount" resultType="java.lang.Integer">
+        SELECT sum(product_amount) FROM buss_order_product_info WHERE order_info_pk=#{orderInfoPk}
+    </select>
+
+    <select id="selectBussOrderProductInfoList" parameterType="com.cms.buss_service.order.domain.BussOrderProductInfo" resultMap="BussOrderProductInfoResult">
+        <include refid="selectBussOrderProductInfoVo"/>
+        <where>
+            1 = 1
+                        <if test="orderInfoPk != null  and orderInfoPk != ''"> AND fo.order_info_pk = #{orderInfoPk}</if>
+                        <if test="productPk != null  and productPk != ''"> AND fo.product_pk = #{productPk}</if>
+                        <if test="productAmount != null "> AND fo.product_amount = #{productAmount}</if>
+                        <if test="productSignPrice != null "> AND fo.product_sign_price = #{productSignPrice}</if>
+                        <if test="productFavorablePrice != null "> AND fo.product_favorable_price = #{productFavorablePrice}</if>
+                        <if test="amountPrice != null "> AND fo.amount_price = #{amountPrice}</if>
+                        <if test="reducePrice != null "> AND fo.reduce_price = #{reducePrice}</if>
+                        <if test="realPrice != null "> AND fo.real_price = #{realPrice}</if>
+                        <if test="snapshot != null  and snapshot != ''"> AND fo.snapshot = #{snapshot}</if>
+                        <if test="reversion != null  and reversion != ''"> AND fo.reversion = #{reversion}</if>
+                        <if test="no1 != null  and no1 != ''"> AND fo.no1 = #{no1}</if>
+                        <if test="no2 != null  and no2 != ''"> AND fo.no2 = #{no2}</if>
+                        <if test="no3 != null  and no3 != ''"> AND fo.no3 = #{no3}</if>
+                        <if test="no4 != null  and no4 != ''"> AND fo.no4 = #{no4}</if>
+                        <if test="no5 != null  and no5 != ''"> AND fo.no5 = #{no5}</if>
+                        <if test="no6 != null  and no6 != ''"> AND fo.no6 = #{no6}</if>
+                        <if test="no7 != null  and no7 != ''"> AND fo.no7 = #{no7}</if>
+                        <if test="no8 != null  and no8 != ''"> AND fo.no8 = #{no8}</if>
+                        <if test="no9 != null  and no9 != ''"> AND fo.no9 = #{no9}</if>
+                        <if test="no10 != null  and no10 != ''"> AND fo.no10 = #{no10}</if>
+                        <if test="no11 != null  and no11 != ''"> AND fo.no11 = #{no11}</if>
+                        <if test="no12 != null  and no12 != ''"> AND fo.no12 = #{no12}</if>
+                        <if test="no13 != null  and no13 != ''"> AND fo.no13 = #{no13}</if>
+                        <if test="no14 != null  and no14 != ''"> AND fo.no14 = #{no14}</if>
+                        <if test="no15no8 != null  and no15no8 != ''"> AND fo.no15no8 = #{no15no8}</if>
+        </where>
+        ${dataScope}
+        ORDER BY fo.create_time DESC
+    </select>
+
+    <select id="selectBussOrderProductInfoById" parameterType="Long" resultMap="BussOrderProductInfoResult">
+        <include refid="selectBussOrderProductInfoVo"/>
+        WHERE fo.pk = #{pk}
+    </select>
+
+    <insert id="insertBussOrderProductInfo" parameterType="com.cms.buss_service.order.domain.BussOrderProductInfo" useGeneratedKeys="true" keyProperty="pk">
+        INSERT INTO buss_order_product_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="orderInfoPk != null  and orderInfoPk != ''">order_info_pk,</if>
+                    <if test="productPk != null  and productPk != ''">product_pk,</if>
+                    <if test="productAmount != null ">product_amount,</if>
+                    <if test="productSignPrice != null ">product_sign_price,</if>
+                    <if test="productFavorablePrice != null ">product_favorable_price,</if>
+                    <if test="amountPrice != null ">amount_price,</if>
+                    <if test="reducePrice != null ">reduce_price,</if>
+                    <if test="realPrice != null ">real_price,</if>
+                    <if test="snapshot != null  and snapshot != ''">snapshot,</if>
+                    <if test="reversion != null  and reversion != ''">reversion,</if>
+                    <if test="createBy != null  and createBy != ''">create_by,</if>
+                    <if test="createTime != null ">create_time,</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by,</if>
+                    <if test="updateTime != null ">update_time,</if>
+                    <if test="no1 != null  and no1 != ''">no1,</if>
+                    <if test="no2 != null  and no2 != ''">no2,</if>
+                    <if test="no3 != null  and no3 != ''">no3,</if>
+                    <if test="no4 != null  and no4 != ''">no4,</if>
+                    <if test="no5 != null  and no5 != ''">no5,</if>
+                    <if test="no6 != null  and no6 != ''">no6,</if>
+                    <if test="no7 != null  and no7 != ''">no7,</if>
+                    <if test="no8 != null  and no8 != ''">no8,</if>
+                    <if test="no9 != null  and no9 != ''">no9,</if>
+                    <if test="no10 != null  and no10 != ''">no10,</if>
+                    <if test="no11 != null  and no11 != ''">no11,</if>
+                    <if test="no12 != null  and no12 != ''">no12,</if>
+                    <if test="no13 != null  and no13 != ''">no13,</if>
+                    <if test="no14 != null  and no14 != ''">no14,</if>
+                    <if test="no15no8 != null  and no15no8 != ''">no15no8,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="orderInfoPk != null  and orderInfoPk != ''">#{orderInfoPk},</if>
+                    <if test="productPk != null  and productPk != ''">#{productPk},</if>
+                    <if test="productAmount != null ">#{productAmount},</if>
+                    <if test="productSignPrice != null ">#{productSignPrice},</if>
+                    <if test="productFavorablePrice != null ">#{productFavorablePrice},</if>
+                    <if test="amountPrice != null ">#{amountPrice},</if>
+                    <if test="reducePrice != null ">#{reducePrice},</if>
+                    <if test="realPrice != null ">#{realPrice},</if>
+                    <if test="snapshot != null  and snapshot != ''">#{snapshot},</if>
+                    <if test="reversion != null  and reversion != ''">#{reversion},</if>
+                    <if test="createBy != null  and createBy != ''">#{createBy},</if>
+                    <if test="createTime != null ">#{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+                    <if test="updateTime != null ">#{updateTime},</if>
+                    <if test="no1 != null  and no1 != ''">#{no1},</if>
+                    <if test="no2 != null  and no2 != ''">#{no2},</if>
+                    <if test="no3 != null  and no3 != ''">#{no3},</if>
+                    <if test="no4 != null  and no4 != ''">#{no4},</if>
+                    <if test="no5 != null  and no5 != ''">#{no5},</if>
+                    <if test="no6 != null  and no6 != ''">#{no6},</if>
+                    <if test="no7 != null  and no7 != ''">#{no7},</if>
+                    <if test="no8 != null  and no8 != ''">#{no8},</if>
+                    <if test="no9 != null  and no9 != ''">#{no9},</if>
+                    <if test="no10 != null  and no10 != ''">#{no10},</if>
+                    <if test="no11 != null  and no11 != ''">#{no11},</if>
+                    <if test="no12 != null  and no12 != ''">#{no12},</if>
+                    <if test="no13 != null  and no13 != ''">#{no13},</if>
+                    <if test="no14 != null  and no14 != ''">#{no14},</if>
+                    <if test="no15no8 != null  and no15no8 != ''">#{no15no8},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussOrderProductInfo" parameterType="com.cms.buss_service.order.domain.BussOrderProductInfo">
+        UPDATE buss_order_product_info
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="orderInfoPk != null  and orderInfoPk != ''">order_info_pk = #{orderInfoPk},</if>
+                    <if test="productPk != null  and productPk != ''">product_pk = #{productPk},</if>
+                    <if test="productAmount != null ">product_amount = #{productAmount},</if>
+                    <if test="productSignPrice != null ">product_sign_price = #{productSignPrice},</if>
+                    <if test="productFavorablePrice != null ">product_favorable_price = #{productFavorablePrice},</if>
+                    <if test="amountPrice != null ">amount_price = #{amountPrice},</if>
+                    <if test="reducePrice != null ">reduce_price = #{reducePrice},</if>
+                    <if test="realPrice != null ">real_price = #{realPrice},</if>
+                    <if test="snapshot != null  and snapshot != ''">snapshot = #{snapshot},</if>
+                    <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+                    <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+                    <if test="createTime != null ">create_time = #{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="updateTime != null ">update_time = #{updateTime},</if>
+                    <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+                    <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+                    <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+                    <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+                    <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+                    <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+                    <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+                    <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+                    <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+                    <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+                    <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+                    <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+                    <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+                    <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+                    <if test="no15no8 != null  and no15no8 != ''">no15no8 = #{no15no8},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussOrderProductInfoById" parameterType="Long">
+        DELETE FROM buss_order_product_info WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussOrderProductInfoByIds" parameterType="String">
+        DELETE FROM buss_order_product_info WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

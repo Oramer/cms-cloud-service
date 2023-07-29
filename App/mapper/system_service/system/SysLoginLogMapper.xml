@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.system_service.system.mapper.SysLoginLogMapper">
+    
+    <resultMap type="com.cms.system_service.system.domain.SysLoginLog" id="SysLoginLogResult">
+        <result property="logId"    column="log_id"    />
+        <result property="loginName"    column="login_name"    />
+        <result property="ipaddr"    column="ipaddr"    />
+        <result property="loginLocation"    column="login_location"    />
+        <result property="browser"    column="browser"    />
+        <result property="os"    column="os"    />
+        <result property="status"    column="status"    />
+        <result property="msg"    column="msg"    />
+        <result property="loginTime"    column="login_time"    />
+        <result property="sessionId"    column="session_id"    />
+    </resultMap>
+
+    <sql id="selectSysLoginLogVo">
+        SELECT og.log_id, og.login_name, og.ipaddr, og.login_location, og.browser, og.os, og.status,
+         og.msg, og.login_time, og.session_id        FROM sys_login_log AS og
+        LEFT JOIN sys_user u ON u.user_id  =  og.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+    <update id="cleanLog">
+        truncate table sys_login_log
+        </update>
+
+    <select id="selectSysLoginLogList" parameterType="com.cms.system_service.system.domain.SysLoginLog" resultMap="SysLoginLogResult">
+        <include refid="selectSysLoginLogVo"/>
+        <where>
+            1 = 1
+            <if test="loginName != null  and loginName != ''"> AND og.login_name like concat('%', #{loginName}, '%')</if>
+            <if test="ipaddr != null  and ipaddr != ''"> AND og.ipaddr = #{ipaddr}</if>
+            <if test="loginLocation != null  and loginLocation != ''"> AND og.login_location = #{loginLocation}</if>
+            <if test="browser != null  and browser != ''"> AND og.browser = #{browser}</if>
+            <if test="os != null  and os != ''"> AND og.os = #{os}</if>
+            <if test="status != null  and status != ''"> AND og.status = #{status}</if>
+            <if test="msg != null  and msg != ''"> AND og.msg = #{msg}</if>
+            <if test="loginTime != null  and loginTime != ''"> AND og.login_time = #{loginTime}</if>
+            <if test="sessionId != null  and sessionId != ''"> AND og.session_id = #{sessionId}</if>
+        </where>
+        ${dataScope}
+        order by og.login_time desc
+    </select>
+    
+    <select id="selectSysLoginLogById" parameterType="Long" resultMap="SysLoginLogResult">
+        <include refid="selectSysLoginLogVo"/>
+        WHERE og.log_id = #{logId}
+    </select>
+        
+    <insert id="insertSysLoginLog" parameterType="com.cms.system_service.system.domain.SysLoginLog" useGeneratedKeys="true" keyProperty="logId">
+        INSERT INTO sys_login_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="loginName != null  and loginName != ''">login_name,</if>
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr,</if>
+            <if test="loginLocation != null  and loginLocation != ''">login_location,</if>
+            <if test="browser != null  and browser != ''">browser,</if>
+            <if test="os != null  and os != ''">os,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="msg != null  and msg != ''">msg,</if>
+            <if test="loginTime != null  and loginTime != ''">login_time,</if>
+            <if test="sessionId != null  and sessionId != ''">session_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="loginName != null  and loginName != ''">#{loginName},</if>
+            <if test="ipaddr != null  and ipaddr != ''">#{ipaddr},</if>
+            <if test="loginLocation != null  and loginLocation != ''">#{loginLocation},</if>
+            <if test="browser != null  and browser != ''">#{browser},</if>
+            <if test="os != null  and os != ''">#{os},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="msg != null  and msg != ''">#{msg},</if>
+            <if test="loginTime != null  and loginTime != ''">#{loginTime},</if>
+            <if test="sessionId != null  and sessionId != ''">#{sessionId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysLoginLog" parameterType="com.cms.system_service.system.domain.SysLoginLog">
+        UPDATE sys_login_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="loginName != null  and loginName != ''">login_name = #{loginName},</if>
+            <if test="ipaddr != null  and ipaddr != ''">ipaddr = #{ipaddr},</if>
+            <if test="loginLocation != null  and loginLocation != ''">login_location = #{loginLocation},</if>
+            <if test="browser != null  and browser != ''">browser = #{browser},</if>
+            <if test="os != null  and os != ''">os = #{os},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="msg != null  and msg != ''">msg = #{msg},</if>
+            <if test="loginTime != null  and loginTime != ''">login_time = #{loginTime},</if>
+            <if test="sessionId != null  and sessionId != ''">session_id = #{sessionId},</if>
+        </trim>
+        WHERE log_id = #{logId}
+    </update>
+
+    <delete id="deleteSysLoginLogById" parameterType="Long">
+        DELETE FROM sys_login_log WHERE log_id = #{logId}
+    </delete>
+
+    <delete id="deleteSysLoginLogByIds" parameterType="String">
+        DELETE FROM sys_login_log WHERE log_id in
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+    
+</mapper>

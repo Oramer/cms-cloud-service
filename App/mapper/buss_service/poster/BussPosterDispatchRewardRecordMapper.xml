@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.poster.mapper.BussPosterDispatchRewardRecordMapper">
+
+    <resultMap type="com.cms.buss_service.poster.domain.BussPosterDispatchRewardRecord" id="BussPosterDispatchRewardRecordResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="posterId"    column="poster_id"    />
+        <result property="productsNum"    column="products_num"    />
+        <result property="deductNum"    column="deduct_num"    />
+        <result property="status"    column="status"    />
+        <result property="sourceFrom"    column="source_from"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="no1"    column="no1"    />
+        <result property="no2"    column="no2"    />
+        <result property="no3"    column="no3"    />
+        <result property="no4"    column="no4"    />
+        <result property="no5"    column="no5"    />
+        <result property="no6"    column="no6"    />
+        <result property="no7"    column="no7"    />
+        <result property="no8"    column="no8"    />
+        <result property="no9"    column="no9"    />
+        <result property="no10"    column="no10"    />
+    </resultMap>
+
+    <sql id="selectBussPosterDispatchRewardRecordVo">
+        SELECT
+        rd.id,
+        rd.order_id,
+        rd.user_id,
+        rd.poster_id, rd.products_num,
+        rd.deduct_num, rd.status, rd.source_from, rd.create_by, rd.create_time,
+        rd.update_by, rd.update_time,
+        concat(p.nick_name,' | ',p.phonenumber) as no1, rd.no2, rd.no3, rd.no4, rd.no5,
+        rd.no6, rd.no7, rd.no8, rd.no9, rd.no10
+        FROM buss_poster_dispatch_reward_record AS rd
+        LEFT JOIN sys_user u ON u.user_id  =  rd.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+        LEFT JOIN buss_station_poster p ON p.pk = rd.poster_id
+    </sql>
+
+    <select id="selectBussPosterDispatchRewardRecordList" parameterType="com.cms.buss_service.poster.domain.BussPosterDispatchRewardRecord" resultMap="BussPosterDispatchRewardRecordResult">
+        <include refid="selectBussPosterDispatchRewardRecordVo"/>
+        <where>
+            1 = 1
+            <if test="orderId != null  and orderId != ''"> AND rd.order_id = #{orderId}</if>
+            <if test="userId != null  and userId != ''"> AND rd.user_id = #{userId}</if>
+            <if test="posterId != null  and posterId != ''"> AND rd.poster_id = #{posterId}</if>
+            <if test="productsNum != null "> AND rd.products_num = #{productsNum}</if>
+            <if test="deductNum != null "> AND rd.deduct_num = #{deductNum}</if>
+            <if test="status != null "> AND rd.status = #{status}</if>
+            <if test="sourceFrom != null "> AND rd.source_from = #{sourceFrom}</if>
+            <if test="no1 != null  and no1 != ''"> AND rd.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''"> AND rd.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''"> AND rd.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''"> AND rd.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''"> AND rd.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''"> AND rd.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''"> AND rd.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''"> AND rd.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''"> AND rd.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''"> AND rd.no10 = #{no10}</if>
+            <if test="searchStart!=null and searchStart!=''">
+                AND rd.create_time  <![CDATA[ >= ]]> #{searchStart}
+            </if>
+            <if test="searchEnd!=null and searchEnd!=''">
+                AND rd.create_time <![CDATA[ <= ]]> #{searchEnd}
+            </if>
+        </where>
+        ${dataScope}
+    </select>
+
+    <select id="selectBussPosterDispatchRewardRecordById" parameterType="Integer" resultMap="BussPosterDispatchRewardRecordResult">
+       SELECT * FROM buss_poster_dispatch_reward_record AS rd
+        WHERE rd.id = #{id}
+    </select>
+
+    <insert id="insertBussPosterDispatchRewardRecord" parameterType="com.cms.buss_service.poster.domain.BussPosterDispatchRewardRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_poster_dispatch_reward_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null  and orderId != ''">order_id,</if>
+            <if test="userId != null  and userId != ''">user_id,</if>
+            <if test="posterId != null  and posterId != ''">poster_id,</if>
+            <if test="productsNum != null ">products_num,</if>
+            <if test="deductNum != null ">deduct_num,</if>
+            <if test="status != null ">status,</if>
+            <if test="sourceFrom != null ">source_from,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null  and orderId != ''">#{orderId},</if>
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            <if test="posterId != null  and posterId != ''">#{posterId},</if>
+            <if test="productsNum != null ">#{productsNum},</if>
+            <if test="deductNum != null ">#{deductNum},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="sourceFrom != null ">#{sourceFrom},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussPosterDispatchRewardRecord" parameterType="com.cms.buss_service.poster.domain.BussPosterDispatchRewardRecord">
+        UPDATE buss_poster_dispatch_reward_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null  and orderId != ''">order_id = #{orderId},</if>
+            <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+            <if test="posterId != null  and posterId != ''">poster_id = #{posterId},</if>
+            <if test="productsNum != null ">products_num = #{productsNum},</if>
+            <if test="deductNum != null ">deduct_num = #{deductNum},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="sourceFrom != null ">source_from = #{sourceFrom},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussPosterDispatchRewardRecordById" parameterType="Integer">
+        DELETE FROM buss_poster_dispatch_reward_record WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussPosterDispatchRewardRecordByIds" parameterType="String">
+        DELETE FROM buss_poster_dispatch_reward_record WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

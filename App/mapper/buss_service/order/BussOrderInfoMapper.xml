@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.order.mapper.BussOrderInfoMapper">
+
+    <resultMap type="com.cms.buss_service.order.domain.BussOrderInfo" id="BussOrderInfoResult">
+        <result property="pk" column="pk"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="orderPersion" column="order_persion"/>
+        <result property="stationId" column="station_id"/>
+        <result property="orderAddressId" column="order_address_id"/>
+        <result property="amount" column="amount"/>
+        <result property="amountofmoney" column="amountofMoney"/>
+        <result property="singlePrice" column="single_price"/>
+        <result property="expressFee" column="express_fee"/>
+        <result property="isOvertime" column="is_overtime"/>
+        <result property="overtimeTime" column="overtime_time"/>
+        <result property="orderRemark" column="order_remark"/>
+        <result property="orderPayTime" column="order_pay_time"/>
+        <result property="completeTime" column="complete_time"/>
+        <result property="orderType" column="order_type"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="payType" column="pay_type"/>
+        <result property="needMortgage" column="need_mortgage"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="cancelReason" column="cancel_reason"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+        <result property="isInvoice" column="isInvoice"/>
+        <association property="address" column="order_address_id" select="queryOrderAddrInfo"/>
+        <association property="poster" column="no5" select="queryPosterInfo"/>
+        <association property="uorder" column="order_persion" select="queryOrderUserInfo"/>
+        <collection property="products" column="pk" select="queryOrderProductList"/>
+        <collection property="bprds" column="order_persion" select="queryUserYtInfo"/>
+        <collection property="blrds" column="order_persion" select="queryUserQtInfo"/>
+    </resultMap>
+
+    <resultMap type="com.cms.buss_service.order.domain.BussOrderInfo" id="BussOrderInfoResultVo">
+        <result property="pk" column="pk"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="orderPersion" column="order_persion"/>
+        <result property="stationId" column="station_id"/>
+        <result property="orderAddressId" column="order_address_id"/>
+        <result property="amount" column="amount"/>
+        <result property="realMoney" column="real_money"/>
+        <result property="amountofmoney" column="amountofMoney"/>
+        <result property="singlePrice" column="single_price"/>
+        <result property="expressFee" column="express_fee"/>
+        <result property="isOvertime" column="is_overtime"/>
+        <result property="overtimeTime" column="overtime_time"/>
+        <result property="orderRemark" column="order_remark"/>
+        <result property="orderPayTime" column="order_pay_time"/>
+        <result property="completeTime" column="complete_time"/>
+        <result property="orderType" column="order_type"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="payType" column="pay_type"/>
+        <result property="needMortgage" column="need_mortgage"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="cancelReason" column="cancel_reason"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+        <result property="isInvoice" column="isInvoice"/>
+        <association property="address" column="order_address_id" select="queryOrderAddrInfo"/>
+        <association property="poster" column="no5" select="queryPosterInfo"/>
+        <association property="uorder" column="order_persion" select="queryOrderUserInfo"/>
+        <association property="htsq" column="pk" select="queryHtsq"/>
+        <collection property="products" column="pk" select="queryOrderProductList"/>
+        <collection property="bprds" column="pk" select="queryOrderYtInfo"/>
+        <collection property="blrds" column="pk" select="queryOrderQtInfo"/>
+    </resultMap>
+
+    <select id="queryBucketList" parameterType="com.cms.buss_service.order.domain.BussOrderInfo"
+            resultMap="BussOrderInfoResultVo">
+        SELECT fo.pk, fo.batch_no, fo.order_time, fo.order_persion,
+        fo.station_id, fo.order_address_id, fo.amount, fo.real_money,fo.amountofMoney,
+        fo.single_price, fo.express_fee, fo.is_overtime, fo.overtime_time,
+        fo.order_remark, fo.order_pay_time, fo.complete_time, fo.order_type,
+        fo.order_status, fo.pay_type, fo.need_mortgage, fo.del_flag,
+        fo.cancel_reason, fo.create_by, fo.create_time, fo.update_by,
+        fo.update_time, fo.no1, fo.no2, fo.no3, fo.no4, fo.no5, fo.no6, fo.no7,
+        fo.no8, b.pk as no9, fo.no10, fo.no11, fo.no12, fo.no13, fo.no14,
+        fo.no15,
+        (SELECT count(1) from buss_user_invoice_record_details WHERE order_pk = fo.pk) as isInvoice
+        FROM buss_order_info fo
+        LEFT JOIN buss_bucket_info b ON b.order_pk = fo.pk
+        LEFT JOIN sys_user u on u.user_id = fo.order_persion
+        WHERE FIND_IN_SET(fo.order_status,"2,3,5,6")
+        <choose>
+            <when test="roleSet!=null and roleSet==3">
+                <if test="no5!=null and no5!=''"><!--筛选业务员信息-->
+                    AND fo.no5 = #{no5}
+                </if>
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+        <if test="stationId!=null">AND fo.station_id = #{stationId}</if>
+        <if test="queryType==0"><!--查待压桶-->
+            AND b.record_type='2' AND b.status = '1'
+        </if>
+        <if test="queryType==1"><!--查已压桶-->
+            AND b.record_type='2' AND b.status = '2'
+        </if>
+        <if test="queryType==2"><!--查已欠桶-->
+            AND b.record_type='1' AND b.status = '1'
+        </if>
+        <if test="queryType==3"><!--查已退桶-->
+            AND b.record_type='3' AND b.status = '2'
+        </if>
+        <if test="searchStart!=null and searchStart!=''">
+            AND b.create_time  <![CDATA[ >= ]]> #{searchStart}
+        </if>
+        <if test="searchEnd!=null and searchEnd!=''">
+            AND b.create_time <![CDATA[ <= ]]> #{searchEnd}
+        </if>
+        <if test="orderPersion!=null and orderPersion!=''">
+           <!-- AND FIND_IN_SET(fo.order_persion , #{orderPersion})-->
+            AND CONCAT(u.user_name,' | ',u.phonenumber) like CONCAT('%',#{orderPersion},'%')
+        </if>
+        <if test="orderUser!=null and orderUser!=''">
+            AND fo.order_persion = #{orderUser}
+        </if>
+        <if test="no5!=null and no5!=''">
+            AND fo.no5 = #{no5}
+        </if>
+        <if test="stationId != null  and stationId != ''">AND fo.station_id = #{stationId}</if>
+        ORDER BY fo.create_time DESC
+    </select>
+    <select id="queryHtsq" resultType="com.cms.buss_service.bucket.domain.BussHtInfo">
+        select * from buss_ht_info where order_id = #{orderId}
+    </select>
+
+    <select id="queryOrderYtInfo" resultType="com.cms.buss_service.bucket.domain.BussBucketDetails">
+        SELECT
+        id,
+        arecord_pk,
+        brand_name,
+        count as no1,
+        no9
+        FROM buss_bucket_details
+        WHERE
+        FIND_IN_SET(arecord_pk,(SELECT GROUP_CONCAT(pk) FROM buss_bucket_info
+        WHERE order_pk=#{orderPk} AND record_type='2' AND status='2' ))
+    </select>
+    <select id="queryOrderQtInfo" resultType="com.cms.buss_service.bucket.domain.BussBucketDetails">
+        SELECT
+        id,
+        arecord_pk,
+        brand_name,
+        count as no1,
+        no9
+        FROM buss_bucket_details
+        WHERE
+        FIND_IN_SET(arecord_pk,(SELECT GROUP_CONCAT(pk) FROM buss_bucket_info
+        WHERE order_pk=#{orderPk} AND record_type='1' AND status='1'))
+    </select>
+
+    <select id="queryPosterInfo" resultType="com.cms.buss_service.poster.domain.BussStationPoster">
+        select * from buss_station_poster where pk = #{stationUserPk}
+    </select>
+    <select id="queryOrderCount" resultType="java.util.Map">
+        SELECT
+        (SELECT count(1) from buss_order_info where station_id=#{stationId} and order_status = 2 and  order_type=1 AND IF(no5='' or no5 is null,1,0)=1)
+        as count0,
+        (SELECT count(1) from buss_order_info where station_id='-1' and order_status = 2) as count1,
+        (SELECT count(1) from buss_order_info o LEFT JOIN (SELECT * from buss_order_reminder GROUP BY order_id) r on o.pk = r.order_id
+        where o.station_id=#{stationId} and FIND_IN_SET(o.order_status,"2,3") AND r.id is NOT NULL) as
+        count2,
+        (SELECT count(1) from buss_order_info where   order_status = 3   and station_id=#{stationId}   and no5=#{no5}
+        ) as  count3
+        FROM
+        buss_order_info
+        LIMIT 1
+       <!-- SELECT
+        (SELECT count(1) from buss_order_info where station_id=#{stationId} and order_status = 2 and no5 is null)
+        as count0,
+        (SELECT count(1) from buss_order_info where station_id='-1' and order_status = 2) as count1,
+        (SELECT count(1) from buss_order_info o LEFT JOIN buss_order_reminder r on o.pk = r.order_id
+        where o.station_id=#{stationId} and FIND_IN_SET(o.order_status,"2,3") AND r.id is NOT NULL) as
+        count2,
+        (SELECT count(1) from buss_order_info where   order_status = 3   and station_id=#{stationId}   and no5=#{no5}
+        ) as  count3
+        FROM
+        buss_order_info
+        LIMIT 1-->
+    </select>
+
+    <select id="queryOrderGroupInfo" resultType="java.util.Map">
+        SELECT
+            (SELECT count(1) from buss_order_info WHERE order_status=3 and no6=0 and no5=#{no5}) as count0,
+            (SELECT count(1) from buss_order_info WHERE order_status=3 and no6=1 and no5=#{no5}) as count1,
+            (SELECT count(1) from buss_order_info WHERE order_status=3 and no6=2 and no5=#{no5}) as count2,
+            (SELECT count(1) from buss_order_info WHERE order_status=3 and no6=3 and no5=#{no5}) as count3
+        FROM
+            buss_order_info
+            LIMIT 1
+    </select>
+    <select id="queryUserYtInfo" resultType="com.cms.buss_service.bucket.domain.BussBucketDetails">
+        SELECT
+        id,
+        arecord_pk,
+        brand_name,
+        SUM(count)  as no1,
+        no9
+        FROM buss_bucket_details
+        WHERE
+        FIND_IN_SET(arecord_pk,(SELECT GROUP_CONCAT(pk) FROM buss_bucket_info WHERE user_pk=#{userPk} AND record_type='2' AND status='2'))
+        GROUP BY brand_name
+    </select>
+    <select id="queryUserQtInfo" resultType="com.cms.buss_service.bucket.domain.BussBucketDetails">
+        SELECT
+        id,
+        arecord_pk,
+        brand_name,
+        SUM(count) as no1,
+        no9
+        FROM buss_bucket_details
+        WHERE
+        FIND_IN_SET(arecord_pk,(SELECT GROUP_CONCAT(pk) FROM buss_bucket_info WHERE user_pk=#{userPk} AND record_type='1' AND status='1'))
+        GROUP BY brand_name
+    </select>
+    <resultMap type="com.cms.buss_service.order.domain.BussOrderInfo" id="BussOrderInvoiceInfoResult">
+        <result property="pk" column="pk"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="orderPersion" column="order_persion"/>
+        <result property="stationId" column="station_id"/>
+        <result property="orderAddressId" column="order_address_id"/>
+        <result property="amount" column="amount"/>
+        <result property="realMoney" column="real_money"/>
+        <result property="amountofmoney" column="amountofMoney"/>
+        <result property="orderType" column="order_type"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="isInvoice" column="isInvoice"/>
+    </resultMap>
+
+    <select id="queryMyStationInTjInfo" resultType="java.util.Map">
+        <!-- SELECT
+         COUNT(IF(to_days(o.create_time) = to_days(now()),o.pk,0)) AS ddzl,
+         COUNT(IF(to_days(o.create_time) = to_days(now()),dps.pk,0))  AS dddps,
+         COUNT(IF(to_days(o.create_time) = to_days(now()),ywc.pk,0))  AS ddywc,
+         0 AS ddth,
+         0 AS hyvip,
+         0 AS hyyj,
+         SUM(cp.real_money)  AS bzzsr,
+         SUM(IF(to_days(o.create_time) = to_days(now()),cp.real_money,0)) AS jrzsr,
+         COUNT(u.user_id)  AS hyzs,
+         COUNT(IF(to_days(u.create_time) = to_days(now()),1,0)) AS jrxzkh,
+         SUM(IF(to_days( bp.create_time ) = to_days(now()),(bp.no1-bp.no2),null))  AS jryt,
+         SUM(IF(to_days( qt.create_time ) = to_days(now()),(qt.no1-qt.no2),null))  AS jrqt,
+         SUM(bp.no1-bp.no2) AS zyts,
+         SUM(qt.no1-qt.no2) AS zqts,
+         (SELECT count(1) FROM buss_user_invoice_record rd WHERE rd.no1='1' AND rd.no2 = 'Y') AS ykps,
+         (SELECT count(1) FROM buss_user_invoice_record rd WHERE rd.no1='1' AND rd.no2 = 'N')  AS dkps,
+         (SELECT SUM(rd.invoice_amount) FROM buss_user_invoice_record rd WHERE  rd.no1='1' AND rd.no2 = 'Y')  AS ykpe,
+         (SELECT SUM(rd.invoice_amount) FROM buss_user_invoice_record rd WHERE rd.no1='1' AND rd.no2 = 'N')  AS dkpe,
+         COUNT(dcl.pk) as dcn1,
+         COUNT(dqd.pk) as dcn2,
+         COUNT(om.id) as dcn3,
+         COUNT(dzs.pk) as dcn4,
+         COUNT(st.pk)	as daiclc
+         FROM buss_water_station_info ws
+         LEFT JOIN buss_order_info o on o.station_id = ws.pk and FIND_IN_SET(o.order_status,"2,3,5,6")
+         LEFT JOIN sys_user u ON u.user_id = o.order_persion
+         LEFT JOIN buss_order_info dps on dps.pk = o.pk and dps.order_status="2"
+         LEFT JOIN buss_order_info ywc on ywc.pk = o.pk  and ywc.order_status="5"
+         LEFT JOIN buss_order_info dcl on dcl.pk = o.pk and dcl.order_type='1' and dcl.order_status='2'
+         LEFT JOIN buss_order_info dqd on dqd.pk = o.pk and dqd.station_id = '-1' and dqd.order_status='2'
+         LEFT JOIN buss_order_info dzs on dzs.pk = o.pk and dzs.order_status='3' and o.no5 = #{no5}
+         LEFT JOIN buss_order_info cp on cp.pk = o.pk and FIND_IN_SET(cp.order_status,"5,6")
+         LEFT JOIN buss_order_reminder om on om.order_id = o.pk
+         LEFT JOIN buss_bucket_info bp on bp.order_pk = o.pk and bp.record_type='2' AND bp.status='2'
+         LEFT JOIN buss_bucket_info qt on qt.order_pk = o.pk and qt.record_type='1' AND qt.status='1'
+         LEFT JOIN buss_bucket_info st on st.order_pk = o.pk and st.record_type='2' AND st.status='1'
+         WHERE ws.pk = #{stationId}
+         LIMIT 1-->
+        SELECT
+        (SELECT count(1) from buss_order_info WHERE FIND_IN_SET(order_status,"2,3,5,6") AND station_id=#{stationId} AND
+        to_days(create_time) = to_days(now())) AS ddzl,
+        (SELECT count(1) from buss_order_info WHERE order_status="2" AND station_id=#{stationId} AND
+        to_days(create_time) = to_days(now())) AS dddps,
+        (SELECT count(1) from buss_order_info WHERE order_status="5" AND station_id=#{stationId} AND
+        to_days(create_time) = to_days(now())) AS ddywc,
+        0 AS ddth,
+        0 AS hyvip,
+        0 AS hyyj,
+        (select SUM(o.real_money) from buss_order_info where station_id=#{stationId} AND
+        FIND_IN_SET(order_status,'5,6') limit 1) AS bzzsr,
+        (select SUM(o.real_money) from buss_order_info where station_id=#{stationId} AND
+        FIND_IN_SET(order_status,'5,6') AND to_days(create_time) = to_days(now()) limit 1) AS jrzsr,
+        (SELECT count(1) from sys_user WHERE cloud_pk= #{stationId} limit 1 ) AS hyzs,
+        (SELECT count(1) from sys_user WHERE cloud_pk=#{stationId} AND to_days(create_time) = to_days(now()) limit 1) AS
+        jrxzkh,
+        (SELECT SUM(count) from buss_bucket_details d LEFT JOIN buss_bucket_info o on o.pk = d.arecord_pk where
+        o.record_type='2' and o.`status`='2' and o.station_pk=#{stationId} AND to_days( o.create_time ) = to_days(now())
+        ) AS jryt,
+        (SELECT SUM(count) from buss_bucket_details d LEFT JOIN buss_bucket_info o on o.pk = d.arecord_pk where
+        o.record_type='1' and o.`status`='1' and o.station_pk=#{stationId} AND to_days( o.create_time ) = to_days(now())
+        ) AS jrqt,
+        (SELECT SUM(count) from buss_bucket_details d LEFT JOIN buss_bucket_info o on o.pk = d.arecord_pk where
+        o.record_type='2' and o.`status`='2' and o.station_pk=#{stationId}) AS zyts,
+        (SELECT SUM(count) from buss_bucket_details d LEFT JOIN buss_bucket_info o on o.pk = d.arecord_pk where
+        o.record_type='1' and o.`status`='1' and o.station_pk=#{stationId})AS zqts,
+        (SELECT count(1) FROM buss_user_invoice_record AS rd WHERE  rd.no1=#{stationId} AND rd.no2 = 'Y' ) AS
+        ykps,
+        (SELECT count(1) FROM buss_user_invoice_record AS rd WHERE  rd.no1=#{stationId} AND rd.no2 = 'N' ) AS
+        dkps,
+        (SELECT SUM(rd.invoice_amount) FROM buss_user_invoice_record AS rd WHERE rd.no1=#{stationId} AND
+        rd.no2 = 'Y' ) AS ykpe,
+        (SELECT SUM(rd.invoice_amount) FROM buss_user_invoice_record AS rd WHERE  rd.no1=#{stationId} AND
+        rd.no2 = 'N' ) AS dkpe,
+        (SELECT count(1) from buss_order_info where station_id=#{stationId} and order_type='1' and order_status='2' ) as
+        dcn1,
+        (SELECT count(1) from buss_order_info where station_id = '-1' and order_status='2') as dcn2,
+        (SELECT count(1) from buss_order_info where station_id=#{stationId}
+        AND FIND_IN_SET(pk,(SELECT GROUP_CONCAT(distinct(order_id)) FROM buss_order_reminder)) and no5 is null) as dcn3,
+        (SELECT count(1) from buss_order_info where station_id=#{stationId} and order_status='3' and no5 = #{no5} ) as dcn4,
+        (SELECT count(1) from buss_bucket_info s where s.station_pk=#{stationId} and s.record_type=2 and s.status='1')	as daiclc
+        FROM
+        buss_order_info o
+        LEFT JOIN sys_user u ON u.user_id = o.order_persion
+        WHERE FIND_IN_SET(o.order_status,"2,3,5,6") AND o.station_id = #{stationId}
+        LIMIT 1
+    </select>
+    <!--TODO 获取快递员端的统计信息-->
+    <select id="queryPosterTjInfo" resultType="java.util.Map">
+        <!--    SELECT
+               count(IF(o.order_status='3' ,true,null)) as dpsc,
+               count(om.id) as khcc as khcc,
+               0 as dsfc,
+               COUNT(DISTINCT(u.user_id)) AS hyzs,
+               COUNT(DISTINCT(u.user_id)) as vipzs,
+               COUNT(IF( DATE_FORMAT(u.create_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m'),true,null)) AS byxzkh,
+               COUNT(IF(to_days(u.create_time) = to_days(now()),true,null)) AS jrxzkh,
+               SUM(p.deduct_num) AS wdzsr ,
+               SUM(IF(YEARWEEK(date_format(p.create_time,'%Y-%m-%d'),1) = YEARWEEK(now(),1),p.deduct_num,null)) AS bzzsr,
+               SUM(IF(DATE_FORMAT(p.create_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m'),p.deduct_num,null)) AS byzsr,
+               SUM(IF(to_days(p.create_time) = to_days(now()),p.deduct_num,null)) AS jrzsr,
+               SUM(IF(to_days(o.create_time) = to_days(now()),true,null)) AS jrpds,
+               SUM(IF(YEARWEEK(date_format(o.create_time,'%Y-%m-%d'),1) = YEARWEEK(now(),1),true,null)) AS bzpds,
+               SUM(IF(DATE_FORMAT(o.create_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m'),true,null)) AS bypds,
+               SUM(IF(YEAR(o.create_time) =YEAR(NOW()),true,null)) AS dnpds,
+               SUM(IF(to_days(o.create_time) = to_days(now()),o.amount,null)) AS jrpjs,
+               SUM(IF(YEARWEEK(date_format(o.create_time,'%Y-%m-%d'),1) = YEARWEEK(now(),1),o.amount,null)) AS bzpjs,
+               SUM(IF(DATE_FORMAT(o.create_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m'),o.amount,null)) AS bypjs,
+               SUM(IF(YEAR(o.create_time) =YEAR(NOW()),o.amount,null)) AS dnpjs,
+               SUM(IF(to_days( bp.create_time ) = to_days(now()),(bp.no1-bp.no2),null))  AS jryt,
+               SUM(IF(to_days( qt.create_time ) = to_days(now()),(qt.no1-qt.no2),null))  AS jrqt,
+               SUM(bp.no1-bp.no2) AS zyts,
+               SUM(qt.no1-qt.no2) AS zqts,
+               COUNT(IF(bp.record_type='2' AND bp.status='1' ,true,null)) AS daiclc
+       FROM buss_order_info o
+       LEFT JOIN  buss_bucket_info bp on bp.order_pk = o.pk and bp.record_type='2' AND bp.status='2'
+       LEFT JOIN  buss_bucket_info qt on qt.order_pk = o.pk and qt.record_type='1' AND qt.status='1'
+       LEFT JOIN  (SELECT * from  buss_poster_dispatch_reward_record GROUP BY order_id) p on p.order_id = o.pk
+       LEFT JOIN sys_user  u on u.user_id = p.user_id and u.ud9 = o.no5
+       LEFT JOIN buss_order_reminder om on om.order_id = o.pk
+       WHERE  o.no5= #{createBy} LIMIT 1-->
+     SELECT
+              (SELECT count(1) from buss_order_info where order_status='3' and no5=#{createBy}) as dpsc,
+              (SELECT count(1) from buss_order_info where  order_status='3' and no5=#{createBy}
+              AND FIND_IN_SET(pk,(SELECT GROUP_CONCAT(distinct(order_id)) FROM buss_order_reminder))) as khcc,
+              0 as dsfc,
+              (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record  where user_id=#{createBy})  AS wdzsr,
+              (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record  where user_id=#{createBy} AND DATE_FORMAT(create_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m')  ) AS byzsr,
+              (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record  where user_id=#{createBy} AND YEARWEEK(date_format(create_time ,'%Y-%m-%d')- INTERVAL 1 DAY) = YEARWEEK(now()  - INTERVAL 1 DAY))AS bzzsr,
+              (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record  where user_id=#{createBy} AND to_days(create_time) = to_days(now()) ) AS jrzsr,
+              (select count(user_id) from sys_user where ud9=  #{createBy} ) AS hyzs,
+              (select count(user_id) from sys_user where ud9=  #{createBy} ) AS vipzs,
+              (select count(user_id) from sys_user where ud9=  #{createBy} AND DATE_FORMAT(create_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m') )AS byxzkh,
+              (select count(user_id) from sys_user where ud9=  #{createBy} AND to_days(create_time) = to_days(now()) ) AS jrxzkh,
+              (select count(pk) from buss_order_info where to_days(create_time) = to_days(now())  AND no5 = #{createBy} )  AS jrpds,
+              (select count(pk) from buss_order_info where YEARWEEK(date_format(create_time,'%Y-%m-%d'),1) = YEARWEEK(now(),1)  AND no5 = #{createBy} ) AS bzpds,
+              (select count(pk) from buss_order_info where DATE_FORMAT(create_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m')  AND no5 = #{createBy} ) AS bypds,
+              (select count(pk) from buss_order_info where no5 = #{createBy} AND YEAR(create_time) =YEAR(NOW()) )  AS dnpds,
+              (select SUM(amount) from buss_order_info where to_days(create_time) = to_days(now())  AND no5 = #{createBy} )  AS jrpjs,
+              (select SUM(amount) from buss_order_info where YEARWEEK(date_format(create_time,'%Y-%m-%d'),1) = YEARWEEK(now(),1)  AND no5 = #{createBy} ) AS bzpjs,
+              (select SUM(amount) from buss_order_info where DATE_FORMAT(create_time, '%Y-%m') = DATE_FORMAT(now(),'%Y-%m')  AND no5 = #{createBy} ) AS bypjs,
+              (select SUM(amount) from buss_order_info where  no5 = #{createBy} AND YEAR(create_time) =YEAR(NOW()) )  AS dnpjs,
+              (
+              SELECT sum(bp.no1)-sum(bp.no2) FROM buss_order_info o
+              LEFT JOIN buss_bucket_info bp on bp.order_pk = o.pk and bp.record_type='2' and bp.status='2' AND to_days( bp.create_time ) = to_days(now())
+              WHERE o.no5= #{createBy}
+              ) AS jryt,
+              (
+              SELECT sum(bp.no1)-sum(bp.no2) FROM buss_order_info o
+              LEFT JOIN buss_bucket_info bp on bp.order_pk = o.pk and bp.record_type='1' and bp.status='1' AND to_days( bp.create_time ) = to_days(now())
+              WHERE o.no5= #{createBy}
+              ) AS jrqt,
+              (
+              SELECT sum(bp.no1)-sum(bp.no2) FROM buss_order_info o
+              LEFT JOIN buss_bucket_info bp on bp.order_pk = o.pk and bp.record_type='2' and bp.status='2'
+              WHERE o.no5= #{createBy}
+              ) AS zyts,
+              (
+              SELECT sum(bp.no1)-sum(bp.no2) FROM buss_order_info o
+              LEFT JOIN buss_bucket_info bp on bp.order_pk = o.pk and bp.record_type='1' and bp.status='1'
+              WHERE o.no5= #{createBy}
+              )AS zqts,
+              (SELECT count(1) from buss_bucket_info s
+              LEFT JOIN buss_order_info o on o.pk = s.order_pk
+              where o.no5=#{createBy} and s.record_type=2 and s.status='1')	as daiclc
+          FROM
+          buss_order_info o LIMIT 1
+    </select>
+
+    <!--获取订单下单人信息-->
+    <select id="queryOrderUserInfo" resultType="com.cms.system_service.system.domain.SysUser">
+        SELECT * from sys_user where user_id = #{uid}
+    </select>
+    <!--获取订单下单人收货地址信息-->
+    <select id="queryOrderAddrInfo" resultType="com.cms.buss_service.order.domain.BussReceiverMessage">
+        SELECT * from buss_receiver_message where id=#{aid}
+    </select>
+    <!--获取订单产品信息-->
+    <select id="queryOrderProductList" resultType="com.cms.buss_service.order.domain.ProductInfoVo">
+       SELECT
+           ct.pk,
+           ct.product_name as productName,
+           ct.product_price as productPrice,
+           ct.product_unit as productUnit,
+           ct.product_tag as productLabel,
+           fo.product_amount as productAmount,
+           ct.product_main_image as no2,
+		   ct.no1 as no1,
+		   pb.brand_name as brandName,
+		   pb.pk as brandPk
+       FROM
+       buss_order_product_info fo
+       left join buss_product_info ct on fo.product_pk = ct.pk
+       left join buss_product_brand pb on pb.pk = ct.product_brand
+       WHERE fo.order_info_pk = #{oid}
+    </select>
+
+    <sql id="selectBussOrderInfoVo">
+        SELECT fo.pk, fo.batch_no, fo.order_time, fo.order_persion,
+        fo.station_id, fo.order_address_id, fo.amount, fo.real_money,fo.amountofMoney,
+        fo.single_price, fo.express_fee, fo.is_overtime, fo.overtime_time,
+         fo.order_remark, fo.order_pay_time, fo.complete_time, fo.order_type,
+         fo.order_status, fo.pay_type, fo.need_mortgage, fo.del_flag,
+         fo.cancel_reason, fo.create_by, fo.create_time, fo.update_by,
+         fo.update_time, fo.no1, fo.no2, fo.no3, fo.no4, fo.no5, fo.no6, fo.no7,
+         fo.no8, fo.no9, fo.no10, fo.no11, fo.no12, fo.no13, fo.no14,
+         fo.no15,
+        (SELECT count(1) from buss_user_invoice_record_details WHERE order_pk = fo.pk) as isInvoice,
+        (select ws.station_name from buss_water_station_info ws where ws.pk = fo.station_id) as stationName,
+        (select su.nick_name from sys_user su where su.user_id = fo.order_persion) as userName
+        FROM buss_order_info AS fo
+        LEFT JOIN sys_user u ON u.user_id  =  fo.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+        LEFT JOIN (select * from buss_order_reminder group by order_id) r on fo.pk = r.order_id
+    </sql>
+    <sql id="selectBussOrderInvoiceInfoVo">
+        SELECT fo.pk, fo.batch_no, fo.order_time, fo.order_persion,
+        fo.station_id, fo.order_address_id, fo.amount, fo.amountofMoney,
+        fo.single_price,
+        fo.cancel_reason, fo.create_by,
+        (SELECT count(1) from buss_user_invoice_record_details WHERE order_pk = fo.pk) as isInvoice
+        FROM buss_order_info AS fo
+        WHERE 1=1 AND  fo.order_status = 5
+    </sql>
+    <select id="selectBussOrderInvoiceList" resultMap="BussOrderInvoiceInfoResult">
+        SELECT ak.* FROM (<include refid="selectBussOrderInvoiceInfoVo"/>) as ak WHERE 1 = 1
+        AND ak.isInvoice &lt; 1
+        <if test="orderPersion != null  and orderPersion != ''">AND ak.order_persion = #{orderPersion}</if>
+    </select>
+
+    <update id="cancelOrderPd">
+        UPDATE buss_order_info set order_status = 2 ,no5 = '',no6='0'   WHERE pk = #{pk}
+    </update>
+
+    <select id="selectBussOrderInfoList" parameterType="com.cms.buss_service.order.domain.BussOrderInfo"
+            resultMap="BussOrderInfoResult">
+        <include refid="selectBussOrderInfoVo"/>
+        <where>
+            1 = 1
+            <if test="batchNo != null  and batchNo != ''">AND fo.batch_no = #{batchNo}</if>
+            <if test="orderTime != null  and orderTime != ''">AND fo.order_time = #{orderTime}</if>
+            <if test="orderPersion != null  and orderPersion != ''">AND fo.order_persion = #{orderPersion}</if>
+            <if test="stationId != null  and stationId != ''">AND fo.station_id = #{stationId}</if>
+            <if test="orderAddressId != null  and orderAddressId != ''">AND fo.order_address_id = #{orderAddressId}</if>
+            <if test="amount != null ">AND fo.amount = #{amount}</if>
+            <if test="realMoney != null ">AND fo.real_money = #{realMoney}</if>
+            <if test="amountofmoney != null ">AND fo.amountofMoney = #{amountofmoney}</if>
+            <if test="singlePrice != null ">AND fo.single_price = #{singlePrice}</if>
+            <if test="expressFee != null ">AND fo.express_fee = #{expressFee}</if>
+            <if test="isOvertime != null  and isOvertime != ''">AND fo.is_overtime = #{isOvertime}</if>
+            <if test="overtimeTime != null  and overtimeTime != ''">AND fo.overtime_time = #{overtimeTime}</if>
+            <if test="orderRemark != null  and orderRemark != ''">AND fo.order_remark = #{orderRemark}</if>
+            <if test="orderPayTime != null  and orderPayTime != ''">AND fo.order_pay_time = #{orderPayTime}</if>
+            <if test="completeTime != null  and completeTime != ''">AND fo.complete_time = #{completeTime}</if>
+            <if test="orderType != null  and orderType != ''">AND fo.order_type = #{orderType}</if>
+            <if test="orderStatus != null ">
+                <choose>
+                    <when test="cdFlag!=null and cdFlag!=''">
+                        AND FIND_IN_SET(fo.order_status,'2,3')
+                        AND r.order_id IS NOT NULL
+                    </when>
+                    <otherwise>
+                        AND fo.order_status = #{orderStatus}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="payType != null  and payType != '' and payType!='null'">AND fo.pay_type LIKE CONCAT('%',#{payType},'%') </if>
+            <if test="needMortgage != null  and needMortgage != ''">AND fo.need_mortgage = #{needMortgage}</if>
+            <if test="cancelReason != null  and cancelReason != ''">AND fo.cancel_reason = #{cancelReason}</if>
+            <if test="no1 != null  and no1 != ''">AND fo.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND fo.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND fo.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND fo.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND fo.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">
+                <choose>
+                    <when test="cdFlag!=null and cdFlag!=''">
+                    </when>
+                    <otherwise>
+                        AND fo.no6 = #{no6}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="no7 != null  and no7 != ''">AND fo.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND fo.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND fo.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND fo.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''">AND fo.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''">AND fo.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''">AND fo.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''">AND fo.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''">AND fo.no15 = #{no15}</if>
+            <if test="queryType!=null and queryType!=''">
+                AND fo.no5 IS NOT NULL
+            </if>
+            <if test="searchStart!=null and searchStart!=''">
+                AND fo.create_time  <![CDATA[ >= ]]> #{searchStart}
+            </if>
+            <if test="searchEnd!=null and searchEnd!=''">
+                AND fo.create_time <![CDATA[ <= ]]> #{searchEnd}
+            </if>
+        </where>
+        ${dataScope}
+        ORDER BY fo.create_time DESC
+    </select>
+
+    <select id="selectBussOrderInfoListForYj" parameterType="com.cms.buss_service.yjuser.domain.BussYjOrderInfo"
+            resultMap="BussOrderInfoResult">
+        <include refid="selectBussOrderInfoVo"/>
+         WHERE
+         fo.no13 = #{orderPersion} and year(fo.order_time)=#{oyear} and month(fo.order_time)=#{omouth}
+        and FIND_IN_SET(fo.order_status,"2,3,5,6")
+        ${dataScope}
+        ORDER BY fo.create_time DESC
+    </select>
+
+
+    <select id="selectUserReminderList" parameterType="com.cms.buss_service.order.domain.BussOrderInfo"
+            resultMap="BussOrderInfoResult">
+        <include refid="selectBussOrderInfoVo"/>
+        <where>
+            1 = 1 AND FIND_IN_SET(fo.pk,(SELECT distinct(order_id) FROM buss_order_reminder))
+            <if test="orderPersion != null  and orderPersion != ''">AND fo.order_persion = #{orderPersion}</if>
+            <if test="stationId != null  and stationId != ''">AND fo.station_id = #{stationId}</if>
+            <if test="orderStatus != null ">AND fo.order_status = #{orderStatus}</if>
+        </where>
+        ${dataScope}
+        ORDER BY fo.create_time DESC
+    </select>
+
+    <select id="selectBussOrderInfoById" parameterType="String" resultMap="BussOrderInfoResult">
+        <include refid="selectBussOrderInfoVo"/>
+        WHERE fo.pk = #{pk}
+    </select>
+    <!--获取超过28分钟未支付的订单-->
+    <select id="selectUnPayOrderInfo" resultMap="BussOrderInfoResult">
+        SELECT * FROM buss_order_info AS fo
+        WHERE fo.order_status = 1 AND TIMESTAMPDIFF(MINUTE, fo.create_time, now()) > 28
+    </select>
+    <!--获取用户末次下单信息-->
+    <select id="queryUserLastOrderInfo" resultType="java.util.Map">
+        SELECT
+            order_time as lastTime,
+            timestampdiff(MONTH,order_time,Now()) as lsMouth,
+            (select count(pk) from buss_order_info WHERE order_type = 1
+                and order_status in ("2,3,5,6") and order_persion= #{userPk}
+            	and order_time > CURRENT_TIMESTAMP - INTERVAL 30 MINUTE)  as isFree
+        FROM
+            buss_order_info
+        WHERE
+            1 = 1
+            AND order_type = 1 and FIND_IN_SET(order_status,"2,3,5,6") and order_persion=#{userPk}
+            order by order_time desc limit 1
+    </select>
+
+    <insert id="insertBussOrderInfo" parameterType="com.cms.buss_service.order.domain.BussOrderInfo">
+        INSERT INTO buss_order_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">pk,</if>
+            <if test="batchNo != null  and batchNo != ''">batch_no,</if>
+            <if test="orderTime != null  and orderTime != ''">order_time,</if>
+            <if test="orderPersion != null  and orderPersion != ''">order_persion,</if>
+            <if test="stationId != null  and stationId != ''">station_id,</if>
+            <if test="orderAddressId != null  and orderAddressId != ''">order_address_id,</if>
+            <if test="amount != null ">amount,</if>
+            <if test="realMoney != null ">real_money,</if>
+            <if test="amountofmoney != null ">amountofMoney,</if>
+            <if test="singlePrice != null ">single_price,</if>
+            <if test="expressFee != null ">express_fee,</if>
+            <if test="isOvertime != null  and isOvertime != ''">is_overtime,</if>
+            <if test="overtimeTime != null  and overtimeTime != ''">overtime_time,</if>
+            <if test="orderRemark != null  and orderRemark != ''">order_remark,</if>
+            <if test="orderPayTime != null  and orderPayTime != ''">order_pay_time,</if>
+            <if test="completeTime != null  and completeTime != ''">complete_time,</if>
+            <if test="orderType != null  and orderType != ''">order_type,</if>
+            <if test="orderStatus != null ">order_status,</if>
+            <if test="payType != null  and payType != ''">pay_type,</if>
+            <if test="needMortgage != null  and needMortgage != ''">need_mortgage,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="cancelReason != null  and cancelReason != ''">cancel_reason,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">#{pk},</if>
+            <if test="batchNo != null  and batchNo != ''">#{batchNo},</if>
+            <if test="orderTime != null  and orderTime != ''">#{orderTime},</if>
+            <if test="orderPersion != null  and orderPersion != ''">#{orderPersion},</if>
+            <if test="stationId != null  and stationId != ''">#{stationId},</if>
+            <if test="orderAddressId != null  and orderAddressId != ''">#{orderAddressId},</if>
+            <if test="amount != null ">#{amount},</if>
+            <if test="realMoney != null ">#{realMoney},</if>
+            <if test="amountofmoney != null ">#{amountofmoney},</if>
+            <if test="singlePrice != null ">#{singlePrice},</if>
+            <if test="expressFee != null ">#{expressFee},</if>
+            <if test="isOvertime != null  and isOvertime != ''">#{isOvertime},</if>
+            <if test="overtimeTime != null  and overtimeTime != ''">#{overtimeTime},</if>
+            <if test="orderRemark != null  and orderRemark != ''">#{orderRemark},</if>
+            <if test="orderPayTime != null  and orderPayTime != ''">#{orderPayTime},</if>
+            <if test="completeTime != null  and completeTime != ''">#{completeTime},</if>
+            <if test="orderType != null  and orderType != ''">#{orderType},</if>
+            <if test="orderStatus != null ">#{orderStatus},</if>
+            <if test="payType != null  and payType != ''">#{payType},</if>
+            <if test="needMortgage != null  and needMortgage != ''">#{needMortgage},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="cancelReason != null  and cancelReason != ''">#{cancelReason},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussOrderInfo" parameterType="com.cms.buss_service.order.domain.BussOrderInfo">
+        UPDATE buss_order_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="batchNo != null  and batchNo != ''">batch_no = #{batchNo},</if>
+            <if test="orderTime != null  and orderTime != ''">order_time = #{orderTime},</if>
+            <if test="orderPersion != null  and orderPersion != ''">order_persion = #{orderPersion},</if>
+            <if test="stationId != null  and stationId != ''">station_id = #{stationId},</if>
+            <if test="orderAddressId != null  and orderAddressId != ''">order_address_id = #{orderAddressId},</if>
+            <if test="amount != null ">amount = #{amount},</if>
+            <if test="realMoney != null ">real_money = #{realMoney},</if>
+            <if test="amountofmoney != null ">amountofMoney = #{amountofmoney},</if>
+            <if test="singlePrice != null ">single_price = #{singlePrice},</if>
+            <if test="expressFee != null ">express_fee = #{expressFee},</if>
+            <if test="isOvertime != null  and isOvertime != ''">is_overtime = #{isOvertime},</if>
+            <if test="overtimeTime != null  and overtimeTime != ''">overtime_time = #{overtimeTime},</if>
+            <if test="orderRemark != null  and orderRemark != ''">order_remark = #{orderRemark},</if>
+            <if test="orderPayTime != null  and orderPayTime != ''">order_pay_time = #{orderPayTime},</if>
+            <if test="completeTime != null  and completeTime != ''">complete_time = #{completeTime},</if>
+            <if test="orderType != null  and orderType != ''">order_type = #{orderType},</if>
+            <if test="orderStatus != null ">order_status = #{orderStatus},</if>
+            <if test="payType != null  and payType != ''">pay_type = #{payType},</if>
+            <if test="needMortgage != null  and needMortgage != ''">need_mortgage = #{needMortgage},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="cancelReason != null  and cancelReason != ''">cancel_reason = #{cancelReason},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null ">no15 = #{no15},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussOrderInfoById" parameterType="String">
+        DELETE FROM buss_order_info WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussOrderInfoByIds" parameterType="String">
+        DELETE FROM buss_order_info WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+    <select id="queryStationOrderTjInfo" resultType="java.util.Map">
+        SELECT st.station_name as name, count(od.pk) as value
+        from  buss_order_info od
+        LEFT JOIN buss_water_station_info st on st.pk = od.station_id
+        where FIND_IN_SET(order_status,'2,3,5,6')
+        <if test="stationId!=null and stationId!=''"> AND od.station_id = #{stationId}</if>
+        GROUP BY station_id
+    </select>
+
+    <select id="queryStationOrderMoneyTjInfo" resultType="java.util.Map">
+        SELECT st.station_name as name, IFNULL(SUM(real_money),0) as value
+        from  buss_order_info od
+        LEFT JOIN buss_water_station_info st on st.pk = od.station_id
+        where FIND_IN_SET(order_status,'2,3,5,6')
+        <if test="stationId!=null and stationId!=''"> AND od.station_id = #{stationId}</if>
+        GROUP BY station_id
+    </select>
+
+    <select id="queryStaionUserTjInfo" resultType="java.util.Map">
+        SELECT
+            wo.station_name as name,
+            count(*)  as value
+        FROM
+            sys_user u
+        LEFT JOIN buss_water_station_info wo on wo.pk = u.cloud_pk
+        WHERE 1= 1 and wo.station_name is not null
+        <if test="cloudPk!=null and cloudPk!=''"> AND u.cloud_pk = #{cloudPk}</if>
+        GROUP BY
+	    u.cloud_pk
+    </select>
+
+    <select id="queryStaionHomeTj" resultType="java.util.Map">
+        SELECT
+	        (SELECT sum(real_money) from  buss_order_info where  FIND_IN_SET(order_status,"2,3,5,6")
+	        <if test="stationId!=null and stationId!=''"> AND station_id=#{stationId} </if> ) as zje,
+            (SELECT count(*) from sys_user where 1 = 1
+            <if test="stationId!=null and stationId!=''"> AND cloud_pk = #{stationId} </if> )  as zyh,
+            (SELECT SUM(count) from buss_bucket_details d LEFT JOIN buss_bucket_info o on o.pk = d.arecord_pk where
+                o.record_type='2' and o.`status`='2'
+            <if test="stationId!=null and stationId!=''"> AND station_pk=#{stationId} </if>  ) as yts,
+            (SELECT SUM(count) from buss_bucket_details d LEFT JOIN buss_bucket_info o on o.pk = d.arecord_pk where
+                o.record_type='1' and o.`status`='1'
+           <if test="stationId!=null and stationId!=''"> AND station_pk=#{stationId} </if> ) as qts
+            FROM
+                buss_order_info LIMIT  1
+    </select>
+</mapper>

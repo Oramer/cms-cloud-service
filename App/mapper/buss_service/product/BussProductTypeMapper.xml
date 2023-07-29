@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.product_type.mapper.BussProductTypeMapper">
+
+    <resultMap type="com.cms.buss_service.product_type.domain.BussProductType" id="BussProductTypeResult">
+        <result property="pk" column="pk"/>
+        <result property="stationId" column="station_id"/>
+        <result property="productTypeName" column="product_type_name"/>
+        <result property="isWater" column="is_water"/>
+        <result property="typeImage" column="type_image"/>
+        <result property="typeDesc" column="type_desc"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+    </resultMap>
+
+    <sql id="selectBussProductTypeVo">
+        SELECT pe.pk,pe.station_id, pe.product_type_name, pe.is_water, pe.type_image, pe.type_desc, pe.parent_id, pe.reversion, pe.create_by, pe.create_time, pe.update_by, pe.update_time, pe.no1, pe.no2, pe.no3, pe.no4, pe.no5, pe.no6, pe.no7, pe.no8, pe.no9, pe.no10, pe.no11, pe.no12, pe.no13, pe.no14, pe.no15
+        FROM buss_product_type AS pe
+        LEFT JOIN sys_user u ON u.user_id  =  pe.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussProductTypeList" parameterType="com.cms.buss_service.product_type.domain.BussProductType"
+            resultMap="BussProductTypeResult">
+        <include refid="selectBussProductTypeVo"/>
+        <where>
+            1 = 1
+            <if test="stationId != null  and stationId != ''">AND pe.station_id = #{stationId}
+            </if>
+            <if test="productTypeName != null  and productTypeName != ''">AND pe.product_type_name like concat('%',
+                #{productTypeName}, '%')
+            </if>
+            <if test="isWater != null  and isWater != ''">AND pe.is_water = #{isWater}</if>
+            <if test="typeImage != null  and typeImage != ''">AND pe.type_image = #{typeImage}</if>
+            <if test="typeDesc != null  and typeDesc != ''">AND pe.type_desc = #{typeDesc}</if>
+            <if test="parentId != null  and parentId != ''">AND pe.parent_id = #{parentId}</if>
+            <if test="reversion != null  and reversion != ''">AND pe.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''">AND pe.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND pe.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND pe.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND pe.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND pe.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND pe.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND pe.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND pe.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND pe.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND pe.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''">AND pe.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''">AND pe.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''">AND pe.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''">AND pe.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''">AND pe.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY pe.pk ASC
+    </select>
+
+    <select id="selectBussProductTypeById" parameterType="String" resultMap="BussProductTypeResult">
+        <include refid="selectBussProductTypeVo"/>
+        WHERE pe.pk = #{pk}
+    </select>
+
+    <insert id="insertBussProductType" parameterType="com.cms.buss_service.product_type.domain.BussProductType">
+        INSERT INTO buss_product_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">pk,</if>
+            <if test="stationId != null  and stationId != ''">station_id,</if>
+            <if test="productTypeName != null  and productTypeName != ''">product_type_name,</if>
+            <if test="isWater != null  and isWater != ''">is_water,</if>
+            <if test="typeImage != null  and typeImage != ''">type_image,</if>
+            <if test="typeDesc != null  and typeDesc != ''">type_desc,</if>
+            <if test="parentId != null  and parentId != ''">parent_id,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">#{pk},</if>
+            <if test="stationId != null  and stationId != ''">#{stationId},</if>
+            <if test="productTypeName != null  and productTypeName != ''">#{productTypeName},</if>
+            <if test="isWater != null  and isWater != ''">#{isWater},</if>
+            <if test="typeImage != null  and typeImage != ''">#{typeImage},</if>
+            <if test="typeDesc != null  and typeDesc != ''">#{typeDesc},</if>
+            <if test="parentId != null  and parentId != ''">#{parentId},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussProductType" parameterType="com.cms.buss_service.product_type.domain.BussProductType">
+        UPDATE buss_product_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stationId != null  and stationId != ''">station_id = #{stationId},</if>
+            <if test="productTypeName != null  and productTypeName != ''">product_type_name = #{productTypeName},</if>
+            <if test="isWater != null  and isWater != ''">is_water = #{isWater},</if>
+            <if test="typeImage != null  and typeImage != ''">type_image = #{typeImage},</if>
+            <if test="typeDesc != null  and typeDesc != ''">type_desc = #{typeDesc},</if>
+            <if test="parentId != null  and parentId != ''">parent_id = #{parentId},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussProductTypeById" parameterType="String">
+        DELETE FROM buss_product_type WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussProductTypeByIds" parameterType="String">
+        DELETE FROM buss_product_type WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

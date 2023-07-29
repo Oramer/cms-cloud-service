@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.bucket.mapper.BussHtInfoMapper">
+
+    <resultMap type="com.cms.buss_service.bucket.domain.BussHtInfo" id="BussHtInfoResult">
+        <result property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="bucketOrderId" column="bucket_order_id"/>
+        <result property="addressId" column="address_id"/>
+        <result property="bucketCount" column="bucket_count"/>
+        <result property="bucketBrand" column="bucket_brand"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+    </resultMap>
+
+    <sql id="selectBussHtInfoVo">
+        SELECT fo.id, fo.order_id, fo.bucket_order_id, fo.address_id, fo.bucket_count, fo.bucket_brand, fo.status, fo.create_by, fo.create_time, fo.update_by, fo.update_time, fo.no1, fo.no2, fo.no3, fo.no4, fo.no5, fo.no6, fo.no7, fo.no8, fo.no9, fo.no10        FROM buss_ht_info AS fo
+        LEFT JOIN sys_user u ON u.user_id  =  fo.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussHtInfoList" parameterType="com.cms.buss_service.bucket.domain.BussHtInfo" resultMap="BussHtInfoResult">
+        <include refid="selectBussHtInfoVo"/>
+        <where>
+            1 = 1
+            <if test="orderId != null  and orderId != ''">AND fo.order_id = #{orderId}</if>
+            <if test="bucketOrderId != null  and bucketOrderId != ''">AND fo.bucket_order_id = #{bucketOrderId}</if>
+            <if test="addressId != null ">AND fo.address_id = #{addressId}</if>
+            <if test="bucketCount != null  and bucketCount != ''">AND fo.bucket_count = #{bucketCount}</if>
+            <if test="bucketBrand != null  and bucketBrand != ''">AND fo.bucket_brand = #{bucketBrand}</if>
+            <if test="status != null ">AND fo.status = #{status}</if>
+            <if test="no1 != null  and no1 != ''">AND fo.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND fo.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND fo.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND fo.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND fo.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND fo.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND fo.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND fo.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND fo.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND fo.no10 = #{no10}</if>
+        </where>
+        ${dataScope}
+    </select>
+
+    <select id="selectBussHtInfoById" parameterType="Long" resultMap="BussHtInfoResult">
+        <include refid="selectBussHtInfoVo"/>
+        WHERE fo.id = #{id}
+    </select>
+
+    <insert id="insertBussHtInfo" parameterType="com.cms.buss_service.bucket.domain.BussHtInfo">
+        INSERT INTO buss_ht_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null ">id,</if>
+            <if test="orderId != null  and orderId != ''">order_id,</if>
+            <if test="bucketOrderId != null  and bucketOrderId != ''">bucket_order_id,</if>
+            <if test="addressId != null ">address_id,</if>
+            <if test="bucketCount != null  and bucketCount != ''">bucket_count,</if>
+            <if test="bucketBrand != null  and bucketBrand != ''">bucket_brand,</if>
+            <if test="status != null ">status,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null ">#{id},</if>
+            <if test="orderId != null  and orderId != ''">#{orderId},</if>
+            <if test="bucketOrderId != null  and bucketOrderId != ''">#{bucketOrderId},</if>
+            <if test="addressId != null ">#{addressId},</if>
+            <if test="bucketCount != null  and bucketCount != ''">#{bucketCount},</if>
+            <if test="bucketBrand != null  and bucketBrand != ''">#{bucketBrand},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussHtInfo" parameterType="com.cms.buss_service.bucket.domain.BussHtInfo">
+        UPDATE buss_ht_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null  and orderId != ''">order_id = #{orderId},</if>
+            <if test="bucketOrderId != null  and bucketOrderId != ''">bucket_order_id = #{bucketOrderId},</if>
+            <if test="addressId != null ">address_id = #{addressId},</if>
+            <if test="bucketCount != null  and bucketCount != ''">bucket_count = #{bucketCount},</if>
+            <if test="bucketBrand != null  and bucketBrand != ''">bucket_brand = #{bucketBrand},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussHtInfoById" parameterType="Long">
+        DELETE FROM buss_ht_info WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussHtInfoByIds" parameterType="String">
+        DELETE FROM buss_ht_info WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

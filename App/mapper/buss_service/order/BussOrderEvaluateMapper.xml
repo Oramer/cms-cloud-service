@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.order.mapper.BussOrderEvaluateMapper">
+
+    <resultMap type="com.cms.buss_service.order.domain.BussOrderEvaluate" id="BussOrderEvaluateResult">
+            <result property="id"    column="id"    />
+            <result property="orderPk"    column="order_pk"    />
+            <result property="evaluateContent"    column="evaluate_content"    />
+            <result property="evaluateRate"    column="evaluate_rate"    />
+            <result property="evaluateImage"    column="evaluate_image"    />
+            <result property="reversion"    column="reversion"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="no1"    column="no1"    />
+            <result property="no2"    column="no2"    />
+            <result property="no3"    column="no3"    />
+            <result property="no4"    column="no4"    />
+            <result property="no5"    column="no5"    />
+            <result property="no6"    column="no6"    />
+            <result property="no7"    column="no7"    />
+            <result property="no8"    column="no8"    />
+            <result property="no9"    column="no9"    />
+            <result property="no10"    column="no10"    />
+            <result property="no11"    column="no11"    />
+            <result property="no12"    column="no12"    />
+            <result property="no13"    column="no13"    />
+            <result property="no14"    column="no14"    />
+            <result property="no15"    column="no15"    />
+    </resultMap>
+
+    <sql id="selectBussOrderEvaluateVo">
+        SELECT te.id, te.order_pk, te.evaluate_content, te.evaluate_rate, te.evaluate_image, te.reversion, te.create_by, te.create_time, te.update_by, te.update_time, te.no1, te.no2, te.no3, te.no4, te.no5, te.no6, te.no7, te.no8, te.no9, te.no10, te.no11, te.no12, te.no13, te.no14, te.no15
+        FROM buss_order_evaluate AS te
+        LEFT JOIN sys_user u ON u.user_id  =  te.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussOrderEvaluateList" parameterType="com.cms.buss_service.order.domain.BussOrderEvaluate" resultMap="BussOrderEvaluateResult">
+        <include refid="selectBussOrderEvaluateVo"/>
+        <where>
+            1 = 1
+                        <if test="orderPk != null  and orderPk != ''"> AND te.order_pk = #{orderPk}</if>
+                        <if test="evaluateContent != null  and evaluateContent != ''"> AND te.evaluate_content = #{evaluateContent}</if>
+                        <if test="evaluateRate != null "> AND te.evaluate_rate = #{evaluateRate}</if>
+                        <if test="evaluateImage != null  and evaluateImage != ''"> AND te.evaluate_image = #{evaluateImage}</if>
+                        <if test="reversion != null  and reversion != ''"> AND te.reversion = #{reversion}</if>
+                        <if test="no1 != null  and no1 != ''"> AND te.no1 = #{no1}</if>
+                        <if test="no2 != null  and no2 != ''"> AND te.no2 = #{no2}</if>
+                        <if test="no3 != null  and no3 != ''"> AND te.no3 = #{no3}</if>
+                        <if test="no4 != null  and no4 != ''"> AND te.no4 = #{no4}</if>
+                        <if test="no5 != null  and no5 != ''"> AND te.no5 = #{no5}</if>
+                        <if test="no6 != null  and no6 != ''"> AND te.no6 = #{no6}</if>
+                        <if test="no7 != null  and no7 != ''"> AND te.no7 = #{no7}</if>
+                        <if test="no8 != null  and no8 != ''"> AND te.no8 = #{no8}</if>
+                        <if test="no9 != null  and no9 != ''"> AND te.no9 = #{no9}</if>
+                        <if test="no10 != null  and no10 != ''"> AND te.no10 = #{no10}</if>
+                        <if test="no11 != null  and no11 != ''"> AND te.no11 = #{no11}</if>
+                        <if test="no12 != null  and no12 != ''"> AND te.no12 = #{no12}</if>
+                        <if test="no13 != null  and no13 != ''"> AND te.no13 = #{no13}</if>
+                        <if test="no14 != null  and no14 != ''"> AND te.no14 = #{no14}</if>
+                        <if test="no15 != null  and no15 != ''"> AND te.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY te.create_time DESC
+    </select>
+
+    <select id="selectBussOrderEvaluateById" parameterType="Long" resultMap="BussOrderEvaluateResult">
+        <include refid="selectBussOrderEvaluateVo"/>
+        WHERE te.id = #{id}
+    </select>
+
+    <insert id="insertBussOrderEvaluate" parameterType="com.cms.buss_service.order.domain.BussOrderEvaluate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_order_evaluate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="orderPk != null  and orderPk != ''">order_pk,</if>
+                    <if test="evaluateContent != null  and evaluateContent != ''">evaluate_content,</if>
+                    <if test="evaluateRate != null ">evaluate_rate,</if>
+                    <if test="evaluateImage != null  and evaluateImage != ''">evaluate_image,</if>
+                    <if test="reversion != null  and reversion != ''">reversion,</if>
+                    <if test="createBy != null  and createBy != ''">create_by,</if>
+                    <if test="createTime != null ">create_time,</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by,</if>
+                    <if test="updateTime != null ">update_time,</if>
+                    <if test="no1 != null  and no1 != ''">no1,</if>
+                    <if test="no2 != null  and no2 != ''">no2,</if>
+                    <if test="no3 != null  and no3 != ''">no3,</if>
+                    <if test="no4 != null  and no4 != ''">no4,</if>
+                    <if test="no5 != null  and no5 != ''">no5,</if>
+                    <if test="no6 != null  and no6 != ''">no6,</if>
+                    <if test="no7 != null  and no7 != ''">no7,</if>
+                    <if test="no8 != null  and no8 != ''">no8,</if>
+                    <if test="no9 != null  and no9 != ''">no9,</if>
+                    <if test="no10 != null  and no10 != ''">no10,</if>
+                    <if test="no11 != null  and no11 != ''">no11,</if>
+                    <if test="no12 != null  and no12 != ''">no12,</if>
+                    <if test="no13 != null  and no13 != ''">no13,</if>
+                    <if test="no14 != null  and no14 != ''">no14,</if>
+                    <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="orderPk != null  and orderPk != ''">#{orderPk},</if>
+                    <if test="evaluateContent != null  and evaluateContent != ''">#{evaluateContent},</if>
+                    <if test="evaluateRate != null ">#{evaluateRate},</if>
+                    <if test="evaluateImage != null  and evaluateImage != ''">#{evaluateImage},</if>
+                    <if test="reversion != null  and reversion != ''">#{reversion},</if>
+                    <if test="createBy != null  and createBy != ''">#{createBy},</if>
+                    <if test="createTime != null ">#{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+                    <if test="updateTime != null ">#{updateTime},</if>
+                    <if test="no1 != null  and no1 != ''">#{no1},</if>
+                    <if test="no2 != null  and no2 != ''">#{no2},</if>
+                    <if test="no3 != null  and no3 != ''">#{no3},</if>
+                    <if test="no4 != null  and no4 != ''">#{no4},</if>
+                    <if test="no5 != null  and no5 != ''">#{no5},</if>
+                    <if test="no6 != null  and no6 != ''">#{no6},</if>
+                    <if test="no7 != null  and no7 != ''">#{no7},</if>
+                    <if test="no8 != null  and no8 != ''">#{no8},</if>
+                    <if test="no9 != null  and no9 != ''">#{no9},</if>
+                    <if test="no10 != null  and no10 != ''">#{no10},</if>
+                    <if test="no11 != null  and no11 != ''">#{no11},</if>
+                    <if test="no12 != null  and no12 != ''">#{no12},</if>
+                    <if test="no13 != null  and no13 != ''">#{no13},</if>
+                    <if test="no14 != null  and no14 != ''">#{no14},</if>
+                    <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussOrderEvaluate" parameterType="com.cms.buss_service.order.domain.BussOrderEvaluate">
+        UPDATE buss_order_evaluate
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="orderPk != null  and orderPk != ''">order_pk = #{orderPk},</if>
+                    <if test="evaluateContent != null  and evaluateContent != ''">evaluate_content = #{evaluateContent},</if>
+                    <if test="evaluateRate != null ">evaluate_rate = #{evaluateRate},</if>
+                    <if test="evaluateImage != null  and evaluateImage != ''">evaluate_image = #{evaluateImage},</if>
+                    <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+                    <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+                    <if test="createTime != null ">create_time = #{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="updateTime != null ">update_time = #{updateTime},</if>
+                    <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+                    <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+                    <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+                    <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+                    <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+                    <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+                    <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+                    <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+                    <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+                    <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+                    <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+                    <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+                    <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+                    <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+                    <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussOrderEvaluateById" parameterType="Long">
+        DELETE FROM buss_order_evaluate WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussOrderEvaluateByIds" parameterType="String">
+        DELETE FROM buss_order_evaluate WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.coupon.mapper.BussUserCouponMapper">
+
+    <resultMap type="com.cms.buss_service.coupon.domain.BussUserCoupon" id="BussUserCouponResult">
+        <result property="id" column="id"/>
+        <result property="userPk" column="user_pk"/>
+        <result property="couponPk" column="coupon_pk"/>
+        <result property="whetherToUse" column="whether_to_use"/>
+        <result property="revision" column="revision"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+    </resultMap>
+
+    <sql id="selectBussUserCouponVo">
+        SELECT
+            co.id,
+            co.user_pk,
+            co.coupon_pk,
+            co.whether_to_use,
+            co.revision,
+            co.create_by,
+            co.create_time,
+            co.update_by,
+            co.update_time,
+            co.no1,
+            co.no2,
+            co.no3,
+            co.no4,
+            co.no5,
+            c.coupon_type as couponType,
+            c.title,
+            c.money,
+            c.threshold,
+            c.start_date AS startDate,
+            c.end_date AS endDate
+        FROM
+            buss_user_coupon AS co
+        LEFT JOIN buss_coupon c ON c.pk = co.coupon_pk
+        LEFT JOIN sys_user u ON u.user_id = co.create_by
+        LEFT JOIN sys_dept d ON u.dept_id = d.dept_id
+    </sql>
+    <select id="selectCoupList" resultMap="com.cms.buss_service.coupon.mapper.BussCouponMapper.BussCouponResult">
+        SELECT
+        co.pk, co.user_range,
+        co.coupon_type,
+        <if test="userPk!=null and userPk!=''">
+            (select count(1) from buss_user_coupon where coupon_pk = co.pk and user_pk= #{userPk}) as no1,
+        </if>
+        <if test="userPk==null or userPk==''">
+            0 as no1,
+        </if>
+        co.title, co.money, co.threshold, co.start_date, co.end_date,
+        co.valid_or_not,
+        (case valid_or_not when 'Y' then '是' else '否' end ) as no2,
+        co.quantity, co.scope_of_uses, co.revision,
+        co.create_by, co.create_time, co.update_by, co.update_time,
+        co.no3, co.no4, co.no5, co.no6, co.no7, co.no8,
+        co.no9, co.no10, co.no11, co.no12, co.no13, co.no14,
+        co.no15, co.no16, co.no17, co.no18, co.no19, co.no20
+        FROM buss_coupon AS co
+        WHERE 1=1
+    </select>
+
+    <select id="selectUserCoupList" resultMap="com.cms.buss_service.coupon.mapper.BussCouponMapper.BussCouponResult">
+        SELECT
+        DISTINCT(co.pk),
+        co.user_range,
+        co.coupon_type,
+        co.no1,
+        co.title, co.money, co.threshold, co.start_date, co.end_date,
+        co.valid_or_not,
+        (case valid_or_not when 'Y' then '是' else '否' end ) as no2,
+        co.quantity, co.scope_of_uses, co.revision,
+        co.create_by, co.create_time, co.update_by, co.update_time,
+        co.no3, co.no4, co.no5, co.no6, co.no7, co.no8,
+        co.no9, co.no10, co.no11, co.no12, co.no13, co.no14,
+        co.no15, co.no16, co.no17, co.no18, co.no19, co.no20
+        FROM buss_coupon AS co
+        LEFT JOIN buss_user_coupon mc on mc.coupon_pk = co.pk
+        WHERE 1=1 AND FIND_IN_SET( co.pk,(
+            SELECT GROUP_CONCAT(coupon_pk) FROM buss_user_coupon AS mc
+            WHERE mc.user_pk = #{userPk} ))
+        <if test="couponType!=null and couponType!=''">AND co.coupon_type = #{couponType}</if>
+        <if test="whetherToUse!=null and whetherToUse!=''">AND mc.whether_to_use = #{whetherToUse}</if>
+    </select>
+
+    <select id="selectBussUserCouponList" parameterType="com.cms.buss_service.coupon.domain.BussUserCoupon"
+            resultMap="BussUserCouponResult">
+        <include refid="selectBussUserCouponVo"/>
+        <where>
+            1 = 1
+            <if test="userPk != null  and userPk != ''">AND co.user_pk = #{userPk}</if>
+            <if test="couponPk != null  and couponPk != ''">AND co.coupon_pk = #{couponPk}</if>
+            <if test="whetherToUse != null  and whetherToUse != ''">AND co.whether_to_use = #{whetherToUse}</if>
+            <if test="revision != null  and revision != ''">AND co.revision = #{revision}</if>
+            <if test="no1 != null  and no1 != ''">AND co.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND co.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND co.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND co.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND co.no5 = #{no5}</if>
+        </where>
+        ${dataScope}
+        ORDER BY co.create_time DESC
+    </select>
+
+    <select id="selectBussUserCouponById" parameterType="Long" resultMap="BussUserCouponResult">
+        <include refid="selectBussUserCouponVo"/>
+        WHERE co.id = #{id}
+    </select>
+
+    <insert id="insertBussUserCoupon" parameterType="com.cms.buss_service.coupon.domain.BussUserCoupon"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_user_coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userPk != null  and userPk != ''">user_pk,</if>
+            <if test="couponPk != null  and couponPk != ''">coupon_pk,</if>
+            <if test="whetherToUse != null  and whetherToUse != ''">whether_to_use,</if>
+            <if test="revision != null  and revision != ''">revision,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userPk != null  and userPk != ''">#{userPk},</if>
+            <if test="couponPk != null  and couponPk != ''">#{couponPk},</if>
+            <if test="whetherToUse != null  and whetherToUse != ''">#{whetherToUse},</if>
+            <if test="revision != null  and revision != ''">#{revision},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussUserCoupon" parameterType="com.cms.buss_service.coupon.domain.BussUserCoupon">
+        UPDATE buss_user_coupon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userPk != null  and userPk != ''">user_pk = #{userPk},</if>
+            <if test="couponPk != null  and couponPk != ''">coupon_pk = #{couponPk},</if>
+            <if test="whetherToUse != null  and whetherToUse != ''">whether_to_use = #{whetherToUse},</if>
+            <if test="revision != null  and revision != ''">revision = #{revision},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussUserCouponById" parameterType="Long">
+        DELETE FROM buss_user_coupon WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussUserCouponByIds" parameterType="String">
+        DELETE FROM buss_user_coupon WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

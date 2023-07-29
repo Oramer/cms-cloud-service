@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.invoice.mapper.BussUserInvoiceRecordDetailsMapper">
+
+    <resultMap type="com.cms.buss_service.invoice.domain.BussUserInvoiceRecordDetails" id="BussUserInvoiceRecordDetailsResult">
+            <result property="id"    column="id"    />
+            <result property="invoiceRecordId"    column="invoice_record_id"    />
+            <result property="orderPk"    column="order_pk"    />
+            <result property="createBy"    column="create_by"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateBy"    column="update_by"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="no1"    column="no1"    />
+            <result property="no2"    column="no2"    />
+            <result property="no3"    column="no3"    />
+            <result property="no4"    column="no4"    />
+            <result property="no5"    column="no5"    />
+            <result property="no6"    column="no6"    />
+            <result property="no7"    column="no7"    />
+            <result property="no8"    column="no8"    />
+            <result property="no9"    column="no9"    />
+            <result property="no10"    column="no10"    />
+            <result property="no11"    column="no11"    />
+            <result property="no12"    column="no12"    />
+            <result property="no13"    column="no13"    />
+            <result property="no14"    column="no14"    />
+            <result property="no15"    column="no15"    />
+    </resultMap>
+
+    <sql id="selectBussUserInvoiceRecordDetailsVo">
+        SELECT ls.id, ls.invoice_record_id, ls.order_pk, ls.create_by, ls.create_time, ls.update_by, ls.update_time, ls.no1, ls.no2, ls.no3, ls.no4, ls.no5, ls.no6, ls.no7, ls.no8, ls.no9, ls.no10, ls.no11, ls.no12, ls.no13, ls.no14, ls.no15
+        FROM buss_user_invoice_record_details AS ls
+        LEFT JOIN sys_user u ON u.user_id  =  ls.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussUserInvoiceRecordDetailsList" parameterType="com.cms.buss_service.invoice.domain.BussUserInvoiceRecordDetails" resultMap="BussUserInvoiceRecordDetailsResult">
+        <include refid="selectBussUserInvoiceRecordDetailsVo"/>
+        <where>
+            1 = 1
+                        <if test="invoiceRecordId != null  and invoiceRecordId != ''"> AND ls.invoice_record_id = #{invoiceRecordId}</if>
+                        <if test="orderPk != null  and orderPk != ''"> AND ls.order_pk = #{orderPk}</if>
+                        <if test="no1 != null  and no1 != ''"> AND ls.no1 = #{no1}</if>
+                        <if test="no2 != null  and no2 != ''"> AND ls.no2 = #{no2}</if>
+                        <if test="no3 != null  and no3 != ''"> AND ls.no3 = #{no3}</if>
+                        <if test="no4 != null  and no4 != ''"> AND ls.no4 = #{no4}</if>
+                        <if test="no5 != null  and no5 != ''"> AND ls.no5 = #{no5}</if>
+                        <if test="no6 != null  and no6 != ''"> AND ls.no6 = #{no6}</if>
+                        <if test="no7 != null  and no7 != ''"> AND ls.no7 = #{no7}</if>
+                        <if test="no8 != null  and no8 != ''"> AND ls.no8 = #{no8}</if>
+                        <if test="no9 != null  and no9 != ''"> AND ls.no9 = #{no9}</if>
+                        <if test="no10 != null  and no10 != ''"> AND ls.no10 = #{no10}</if>
+                        <if test="no11 != null  and no11 != ''"> AND ls.no11 = #{no11}</if>
+                        <if test="no12 != null  and no12 != ''"> AND ls.no12 = #{no12}</if>
+                        <if test="no13 != null  and no13 != ''"> AND ls.no13 = #{no13}</if>
+                        <if test="no14 != null  and no14 != ''"> AND ls.no14 = #{no14}</if>
+                        <if test="no15 != null  and no15 != ''"> AND ls.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY ls.create_time DESC
+    </select>
+
+    <select id="selectBussUserInvoiceRecordDetailsById" parameterType="Long" resultMap="BussUserInvoiceRecordDetailsResult">
+        <include refid="selectBussUserInvoiceRecordDetailsVo"/>
+        WHERE ls.id = #{id}
+    </select>
+
+    <insert id="insertBussUserInvoiceRecordDetails" parameterType="com.cms.buss_service.invoice.domain.BussUserInvoiceRecordDetails">
+        INSERT INTO buss_user_invoice_record_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null ">id,</if>
+                    <if test="invoiceRecordId != null  and invoiceRecordId != ''">invoice_record_id,</if>
+                    <if test="orderPk != null  and orderPk != ''">order_pk,</if>
+                    <if test="createBy != null  and createBy != ''">create_by,</if>
+                    <if test="createTime != null ">create_time,</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by,</if>
+                    <if test="updateTime != null ">update_time,</if>
+                    <if test="no1 != null  and no1 != ''">no1,</if>
+                    <if test="no2 != null  and no2 != ''">no2,</if>
+                    <if test="no3 != null  and no3 != ''">no3,</if>
+                    <if test="no4 != null  and no4 != ''">no4,</if>
+                    <if test="no5 != null  and no5 != ''">no5,</if>
+                    <if test="no6 != null  and no6 != ''">no6,</if>
+                    <if test="no7 != null  and no7 != ''">no7,</if>
+                    <if test="no8 != null  and no8 != ''">no8,</if>
+                    <if test="no9 != null  and no9 != ''">no9,</if>
+                    <if test="no10 != null  and no10 != ''">no10,</if>
+                    <if test="no11 != null  and no11 != ''">no11,</if>
+                    <if test="no12 != null  and no12 != ''">no12,</if>
+                    <if test="no13 != null  and no13 != ''">no13,</if>
+                    <if test="no14 != null  and no14 != ''">no14,</if>
+                    <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null ">#{id},</if>
+                    <if test="invoiceRecordId != null  and invoiceRecordId != ''">#{invoiceRecordId},</if>
+                    <if test="orderPk != null  and orderPk != ''">#{orderPk},</if>
+                    <if test="createBy != null  and createBy != ''">#{createBy},</if>
+                    <if test="createTime != null ">#{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+                    <if test="updateTime != null ">#{updateTime},</if>
+                    <if test="no1 != null  and no1 != ''">#{no1},</if>
+                    <if test="no2 != null  and no2 != ''">#{no2},</if>
+                    <if test="no3 != null  and no3 != ''">#{no3},</if>
+                    <if test="no4 != null  and no4 != ''">#{no4},</if>
+                    <if test="no5 != null  and no5 != ''">#{no5},</if>
+                    <if test="no6 != null  and no6 != ''">#{no6},</if>
+                    <if test="no7 != null  and no7 != ''">#{no7},</if>
+                    <if test="no8 != null  and no8 != ''">#{no8},</if>
+                    <if test="no9 != null  and no9 != ''">#{no9},</if>
+                    <if test="no10 != null  and no10 != ''">#{no10},</if>
+                    <if test="no11 != null  and no11 != ''">#{no11},</if>
+                    <if test="no12 != null  and no12 != ''">#{no12},</if>
+                    <if test="no13 != null  and no13 != ''">#{no13},</if>
+                    <if test="no14 != null  and no14 != ''">#{no14},</if>
+                    <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussUserInvoiceRecordDetails" parameterType="com.cms.buss_service.invoice.domain.BussUserInvoiceRecordDetails">
+        UPDATE buss_user_invoice_record_details
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="invoiceRecordId != null  and invoiceRecordId != ''">invoice_record_id = #{invoiceRecordId},</if>
+                    <if test="orderPk != null  and orderPk != ''">order_pk = #{orderPk},</if>
+                    <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+                    <if test="createTime != null ">create_time = #{createTime},</if>
+                    <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+                    <if test="updateTime != null ">update_time = #{updateTime},</if>
+                    <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+                    <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+                    <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+                    <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+                    <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+                    <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+                    <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+                    <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+                    <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+                    <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+                    <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+                    <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+                    <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+                    <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+                    <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussUserInvoiceRecordDetailsById" parameterType="Long">
+        DELETE FROM buss_user_invoice_record_details WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussUserInvoiceRecordDetailsByIds" parameterType="String">
+        DELETE FROM buss_user_invoice_record_details WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

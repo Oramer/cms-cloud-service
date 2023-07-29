@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.station.mapper.BussStationInountMapper">
+
+    <resultMap type="com.cms.buss_service.station.domain.BussStationInount" id="BussStationInountResult">
+        <result property="id"    column="id"    />
+        <result property="stationId"    column="station_id"    />
+        <result property="moneyNum"    column="money_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBussStationInountVo">
+        SELECT nt.id, nt.station_id, nt.money_num, nt.create_by, nt.create_time, nt.update_by, nt.update_time        FROM buss_station_inount AS nt
+        LEFT JOIN sys_user u ON u.user_id  =  nt.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussStationInountByStationId" resultMap="BussStationInountResult">
+        select  * from buss_station_inount where station_id = #{stationId}
+    </select>
+    <!--查询水站收入信息-->
+    <select id="queryStationIncome" resultType="java.math.BigDecimal">
+        SELECT money_num from buss_station_inount WHERE  station_id = #{stationId}
+    </select>
+
+
+    <select id="selectBussStationInountList" parameterType="com.cms.buss_service.station.domain.BussStationInount" resultMap="BussStationInountResult">
+        <include refid="selectBussStationInountVo"/>
+        <where>
+            1 = 1
+            <if test="stationId != null "> AND nt.station_id = #{stationId}</if>
+            <if test="moneyNum != null "> AND nt.money_num = #{moneyNum}</if>
+        </where>
+        ${dataScope}
+    </select>
+
+    <select id="selectBussStationInountById"  resultMap="BussStationInountResult">
+        <include refid="selectBussStationInountVo"/>
+        WHERE nt.id = #{id}
+    </select>
+
+    <insert id="insertBussStationInount" parameterType="com.cms.buss_service.station.domain.BussStationInount" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_station_inount
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stationId != null ">station_id,</if>
+            <if test="moneyNum != null ">money_num,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stationId != null ">#{stationId},</if>
+            <if test="moneyNum != null ">#{moneyNum},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussStationInount" parameterType="com.cms.buss_service.station.domain.BussStationInount">
+        UPDATE buss_station_inount
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stationId != null ">station_id = #{stationId},</if>
+            <if test="moneyNum != null ">money_num = #{moneyNum},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussStationInountById" parameterType="Integer">
+        DELETE FROM buss_station_inount WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussStationInountByIds" parameterType="String">
+        DELETE FROM buss_station_inount WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.order.mapper.BussReceiverMessageMapper">
+
+    <resultMap type="com.cms.buss_service.order.domain.BussReceiverMessage" id="BussReceiverMessageResult">
+        <result property="id" column="id"/>
+        <result property="memberPk" column="member_pk"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="county" column="county"/>
+        <result property="detailes" column="detailes"/>
+        <result property="tags" column="tags"/>
+        <result property="isDefault" column="is_default"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="addressType" column="address_type"/>
+        <result property="bulidingType" column="buliding_type"/>
+        <result property="floorNum" column="floor_num"/>
+        <result property="companyName" column="company_name"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+    </resultMap>
+
+    <sql id="selectBussReceiverMessageVo">
+        SELECT ge.id, ge.member_pk, ge.name, ge.phone, ge.province, ge.city, ge.county, ge.detailes, ge.tags, ge.is_default, ge.is_delete, ge.address_type, ge.buliding_type, ge.floor_num, ge.company_name, ge.reversion, ge.create_by, ge.create_time, ge.update_by, ge.update_time, ge.no1, ge.no2, ge.no3, ge.no4, ge.no5, ge.no6, ge.no7, ge.no8, ge.no9, ge.no10
+        FROM buss_receiver_message AS ge
+        LEFT JOIN sys_user u ON u.user_id  =  ge.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+
+    <select id="queryUserTjInfoForPT" resultType="java.util.Map">
+                SELECT
+                w.station_name as stationName,
+                u.user_id as userId,
+                u.create_time as createTime,
+                u.user_name as userName,
+                u.nick_name as nickName,
+                CONCAT(rm.province,' / ',rm.city,' / ',rm.county,' / ',rm.detailes) as address,
+				(SELECT count(1) from sys_user where ud9 = u.user_id ) as xiajishu,
+				(SELECT count(1) FROM buss_order_info where order_persion = u.user_id ) as xiadanshu,
+				(SELECT SUM(product_amount) FROM buss_order_product_info where create_by = u.user_id ) as xiadanjianshu,
+                (SELECT SUM(no1-no2) from buss_bucket_info  where user_pk = u.user_id and  record_type=1 and status=1) as qts,
+                (SELECT SUM(no1-no2) from buss_bucket_info  where user_pk = u.user_id and  record_type=2 and status=2) as yts,
+                (SELECT SUM(no1-no2) from buss_bucket_info  where user_pk = u.user_id and  record_type=3  GROUP BY user_pk) as yhs
+                from sys_user u
+                LEFT JOIN buss_receiver_message rm on rm.member_pk = u.user_id
+                INNER JOIN buss_water_station_info w on u.cloud_pk = w.pk
+                WHERE 1 = 1
+                <if test="searchStart!=null and searchStart!=''">
+                    and  u.create_time  <![CDATA[ >= ]]> #{searchStart}
+                </if>
+                <if test="searchEnd!=null and searchEnd!=''">
+                    and u.create_time <![CDATA[ <= ]]> #{searchEnd}
+                </if>
+				GROUP BY u.user_id
+                order by qts desc
+    </select>
+
+    <select id="queryProductSaleInfoForPT" resultType="java.util.Map">
+            SELECT
+                SUM( pi.product_amount ) as xiaoliang,
+                SUM( pi.product_amount ) * p.product_price as zongjia,
+                pi.product_pk as productPk,
+                p.product_name as productName,
+                pt.product_type_name as typeName,
+                pb.brand_name as brandName
+            FROM
+                buss_order_product_info  pi
+                LEFT JOIN buss_product_info p on pi.product_pk = p.pk
+                LEFT JOIN buss_product_type pt on p.product_type = pt.pk
+                LEFT JOIN buss_product_brand pb on pb.pk = p.product_brand
+            WHERE p.product_name is not null
+            <if test="searchStart!=null and searchStart!=''">
+                and  pi.create_time  <![CDATA[ >= ]]> #{searchStart}
+            </if>
+            <if test="searchEnd!=null and searchEnd!=''">
+                and pi.create_time <![CDATA[ <= ]]> #{searchEnd}
+            </if>
+            GROUP BY
+                pi.product_pk
+            ORDER BY xiaoliang desc
+    </select>
+
+
+    <select  id="queryPosterTjForPT" resultType="java.util.Map">
+        SELECT
+            w.station_name as stationName,
+            u.user_name as userName,
+            u.nick_name as nickName,
+            u.phonenumber as phonenumber,
+            p.join_time as joinTime,
+            (SELECT count(1) from buss_order_info WHERE no5= u.user_id) as pss,
+            (SELECT SUM(amountofMoney) from buss_order_info WHERE no5= u.user_id) as psje,
+            (SELECT count(amount) from buss_order_info WHERE no5= u.user_id) as psjs,
+            (SELECT sum(deduct_num) from buss_poster_dispatch_reward_record where source_from=4 and user_id = u.user_id) as paloufei,
+            (SELECT sum(deduct_num) from buss_poster_dispatch_reward_record where source_from=3 and user_id = u.user_id) as julitic,
+            (SELECT sum(deduct_num) from buss_poster_dispatch_reward_record where source_from=1 and user_id = u.user_id) as peisongf,
+            (SELECT sum(deduct_num) from buss_poster_dispatch_reward_record where source_from=2 and user_id = u.user_id) as xiajitc
+        FROM
+            sys_user u
+            INNER JOIN  buss_station_poster p ON p.user_pk = u.user_id
+            INNER JOIN buss_water_station_info w on u.cloud_pk = w.pk
+        WHERE 1=1
+        <if test="searchStart!=null and searchStart!=''">
+            and  p.create_time  <![CDATA[ >= ]]> #{searchStart}
+        </if>
+        <if test="searchEnd!=null and searchEnd!=''">
+            and p.create_time <![CDATA[ <= ]]> #{searchEnd}
+        </if>
+    </select>
+
+    <select id="selectReceiveDefault" parameterType="com.cms.buss_service.order.domain.BussReceiverMessage"
+            resultMap="BussReceiverMessageResult">
+        <include refid="selectBussReceiverMessageVo"/>
+        WHERE ge.member_pk=#{userPk} AND ge.is_default = 'Y'
+    </select>
+
+    <select id="selectBussReceiverMessageList" parameterType="com.cms.buss_service.order.domain.BussReceiverMessage"
+            resultMap="BussReceiverMessageResult">
+        <include refid="selectBussReceiverMessageVo"/>
+        <where>
+            1 = 1
+            <if test="memberPk != null  and memberPk != ''">AND ge.member_pk = #{memberPk}</if>
+            <if test="name != null  and name != ''">AND ge.name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''">AND ge.phone = #{phone}</if>
+            <if test="province != null  and province != ''">AND ge.province = #{province}</if>
+            <if test="city != null  and city != ''">AND ge.city = #{city}</if>
+            <if test="county != null  and county != ''">AND ge.county = #{county}</if>
+            <if test="detailes != null  and detailes != ''">AND ge.detailes = #{detailes}
+            </if>
+            <if test="tags != null  and tags != ''">AND ge.tags = #{tags}</if>
+            <if test="isDefault != null ">AND ge.is_default = #{isDefault}</if>
+            <if test="isDelete != null ">AND ge.is_delete = #{isDelete}</if>
+            <if test="addressType != null  and addressType != ''">AND ge.address_type = #{addressType}</if>
+            <if test="bulidingType != null  and bulidingType != ''">AND ge.buliding_type = #{bulidingType}</if>
+            <if test="floorNum != null ">AND ge.floor_num = #{floorNum}</if>
+            <if test="companyName != null  and companyName != ''">AND ge.company_name like concat('%', #{companyName},
+                '%')
+            </if>
+            <if test="reversion != null  and reversion != ''">AND ge.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''">AND ge.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND ge.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND ge.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND ge.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND ge.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND ge.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND ge.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND ge.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND ge.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND ge.no10 = #{no10}</if>
+        </where>
+        ${dataScope}
+        ORDER BY ge.create_time DESC
+    </select>
+
+    <select id="selectBussReceiverMessageById" parameterType="Long" resultMap="BussReceiverMessageResult">
+        <include refid="selectBussReceiverMessageVo"/>
+        WHERE ge.id = #{id}
+    </select>
+
+    <insert id="insertBussReceiverMessage" parameterType="com.cms.buss_service.order.domain.BussReceiverMessage"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_receiver_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberPk != null  and memberPk != ''">member_pk,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="province != null  and province != ''">province,</if>
+            <if test="city != null  and city != ''">city,</if>
+            <if test="county != null  and county != ''">county,</if>
+            <if test="detailes != null  and detailes != ''">detailes,</if>
+            <if test="tags != null  and tags != ''">tags,</if>
+            <if test="isDefault != null ">is_default,</if>
+            <if test="isDelete != null ">is_delete,</if>
+            <if test="addressType != null  and addressType != ''">address_type,</if>
+            <if test="bulidingType != null  and bulidingType != ''">buliding_type,</if>
+            <if test="floorNum != null ">floor_num,</if>
+            <if test="companyName != null  and companyName != ''">company_name,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberPk != null  and memberPk != ''">#{memberPk},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="province != null  and province != ''">#{province},</if>
+            <if test="city != null  and city != ''">#{city},</if>
+            <if test="county != null  and county != ''">#{county},</if>
+            <if test="detailes != null  and detailes != ''">#{detailes},</if>
+            <if test="tags != null  and tags != ''">#{tags},</if>
+            <if test="isDefault != null ">#{isDefault},</if>
+            <if test="isDelete != null ">#{isDelete},</if>
+            <if test="addressType != null  and addressType != ''">#{addressType},</if>
+            <if test="bulidingType != null  and bulidingType != ''">#{bulidingType},</if>
+            <if test="floorNum != null ">#{floorNum},</if>
+            <if test="companyName != null  and companyName != ''">#{companyName},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussReceiverMessage" parameterType="com.cms.buss_service.order.domain.BussReceiverMessage">
+        UPDATE buss_receiver_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberPk != null  and memberPk != ''">member_pk = #{memberPk},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="province != null  and province != ''">province = #{province},</if>
+            <if test="city != null  and city != ''">city = #{city},</if>
+            <if test="county != null  and county != ''">county = #{county},</if>
+            <if test="detailes != null  and detailes != ''">detailes = #{detailes},</if>
+            <if test="tags != null  and tags != ''">tags = #{tags},</if>
+            <if test="isDefault != null ">is_default = #{isDefault},</if>
+            <if test="isDelete != null ">is_delete = #{isDelete},</if>
+            <if test="addressType != null  and addressType != ''">address_type = #{addressType},</if>
+            <if test="bulidingType != null  and bulidingType != ''">buliding_type = #{bulidingType},</if>
+            <if test="floorNum != null ">floor_num = #{floorNum},</if>
+            <if test="companyName != null  and companyName != ''">company_name = #{companyName},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussReceiverMessageById" parameterType="Long">
+       <!-- DELETE FROM buss_receiver_message WHERE id = #{id}-->
+       UPDATE buss_receiver_message SET is_delete = '1' WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussReceiverMessageByIds" parameterType="String">
+        DELETE FROM buss_receiver_message WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

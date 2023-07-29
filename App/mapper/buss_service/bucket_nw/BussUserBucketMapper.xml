@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.bucket_nw.mapper.BussUserBucketMapper">
+    
+    <resultMap type="com.cms.buss_service.bucket_nw.domain.BussUserBucket" id="BussUserBucketResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="stationId"    column="station_id"    />
+        <result property="ytCount"    column="yt_count"    />
+        <result property="qtCount"    column="qt_count"    />
+        <result property="htCount"    column="ht_count"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="no1"    column="no1"    />
+        <result property="no2"    column="no2"    />
+        <result property="no3"    column="no3"    />
+        <result property="no4"    column="no4"    />
+        <result property="no5"    column="no5"    />
+        <result property="no6"    column="no6"    />
+        <result property="no7"    column="no7"    />
+        <result property="no8"    column="no8"    />
+        <result property="no9"    column="no9"    />
+        <result property="no10"    column="no10"    />
+    </resultMap>
+
+    <sql id="selectBussUserBucketVo">
+        SELECT et.id, et.user_id, et.station_id, et.yt_count, et.qt_count, et.ht_count, et.create_by, et.create_time, et.update_by, et.update_time, et.no1, et.no2, et.no3, et.no4, et.no5, et.no6, et.no7, et.no8, et.no9, et.no10        FROM buss_user_bucket AS et
+        LEFT JOIN sys_user u ON u.user_id  =  et.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussUserBucketList" parameterType="com.cms.buss_service.bucket_nw.domain.BussUserBucket" resultMap="BussUserBucketResult">
+        <include refid="selectBussUserBucketVo"/>
+        <where>
+            1 = 1
+            <if test="userId != null  and userId != ''"> AND et.user_id = #{userId}</if>
+            <if test="stationId != null  and stationId != ''"> AND et.station_id = #{stationId}</if>
+            <if test="ytCount != null "> AND et.yt_count = #{ytCount}</if>
+            <if test="qtCount != null "> AND et.qt_count = #{qtCount}</if>
+            <if test="htCount != null "> AND et.ht_count = #{htCount}</if>
+            <if test="no1 != null  and no1 != ''"> AND et.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''"> AND et.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''"> AND et.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''"> AND et.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''"> AND et.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''"> AND et.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''"> AND et.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''"> AND et.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''"> AND et.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''"> AND et.no10 = #{no10}</if>
+        </where>
+        ${dataScope}
+    </select>
+    
+    <select id="selectBussUserBucketById" parameterType="Long" resultMap="BussUserBucketResult">
+        <include refid="selectBussUserBucketVo"/>
+        WHERE et.id = #{id}
+    </select>
+        
+    <insert id="insertBussUserBucket" parameterType="com.cms.buss_service.bucket_nw.domain.BussUserBucket" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_user_bucket
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id,</if>
+            <if test="stationId != null  and stationId != ''">station_id,</if>
+            <if test="ytCount != null ">yt_count,</if>
+            <if test="qtCount != null ">qt_count,</if>
+            <if test="htCount != null ">ht_count,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            <if test="stationId != null  and stationId != ''">#{stationId},</if>
+            <if test="ytCount != null ">#{ytCount},</if>
+            <if test="qtCount != null ">#{qtCount},</if>
+            <if test="htCount != null ">#{htCount},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBussUserBucket" parameterType="com.cms.buss_service.bucket_nw.domain.BussUserBucket">
+        UPDATE buss_user_bucket
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id = #{userId},</if>
+            <if test="stationId != null  and stationId != ''">station_id = #{stationId},</if>
+            <if test="ytCount != null ">yt_count = #{ytCount},</if>
+            <if test="qtCount != null ">qt_count = #{qtCount},</if>
+            <if test="htCount != null ">ht_count = #{htCount},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussUserBucketById" parameterType="Long">
+        DELETE FROM buss_user_bucket WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussUserBucketByIds" parameterType="String">
+        DELETE FROM buss_user_bucket WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

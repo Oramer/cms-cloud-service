@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.message.BussMessageInfoMapper">
+
+    <resultMap type="com.cms.buss_service.message.BussMessageInfo" id="BussMessageInfoResult">
+        <result property="pk" column="pk"/>
+        <result property="messageType" column="message_type"/>
+        <result property="messageTitle" column="message_title"/>
+        <result property="messageContent" column="message_content"/>
+        <result property="reciver" column="reciver"/>
+        <result property="sender" column="sender"/>
+        <result property="isRead" column="is_read"/>
+        <result property="bussinessId" column="bussiness_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+    </resultMap>
+
+    <sql id="selectBussMessageInfoVo">
+        SELECT fo.pk, fo.message_type, fo.message_title, fo.message_content, fo.reciver, fo.sender, fo.is_read, fo.bussiness_id, fo.create_by, fo.create_time, fo.update_by, fo.update_time, fo.no1, fo.no2, fo.no3, fo.no4, fo.no5, fo.no6, fo.no7, fo.no8, fo.no9, fo.no10        FROM buss_message_info AS fo
+        LEFT JOIN sys_user u ON u.user_id  =  fo.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussMessageInfoList" parameterType="com.cms.buss_service.message.BussMessageInfo"
+            resultMap="BussMessageInfoResult">
+        <include refid="selectBussMessageInfoVo"/>
+        <where>
+            1 = 1
+            <if test="messageType != null ">AND fo.message_type = #{messageType}</if>
+            <if test="messageTitle != null  and messageTitle != ''">AND fo.message_title = #{messageTitle}</if>
+            <if test="messageContent != null  and messageContent != ''">AND fo.message_content = #{messageContent}</if>
+            <if test="reciver != null  and reciver != ''">AND fo.reciver = #{reciver}</if>
+            <if test="sender != null  and sender != ''">AND fo.sender = #{sender}</if>
+            <if test="isRead != null ">AND fo.is_read = #{isRead}</if>
+            <if test="bussinessId != null  and bussinessId != ''">AND fo.bussiness_id = #{bussinessId}</if>
+            <if test="no1 != null  and no1 != ''">AND fo.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND fo.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND fo.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND fo.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND fo.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND fo.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND fo.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND fo.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND fo.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND fo.no10 = #{no10}</if>
+        </where>
+        ${dataScope}
+    </select>
+
+    <select id="selectBussMessageInfoById" parameterType="Long" resultMap="BussMessageInfoResult">
+        <include refid="selectBussMessageInfoVo"/>
+        WHERE fo.pk = #{pk}
+    </select>
+
+    <insert id="insertBussMessageInfo" parameterType="com.cms.buss_service.message.BussMessageInfo"
+            useGeneratedKeys="true" keyProperty="pk">
+        INSERT INTO buss_message_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="messageType != null ">message_type,</if>
+            <if test="messageTitle != null  and messageTitle != ''">message_title,</if>
+            <if test="messageContent != null ">message_content,</if>
+            <if test="reciver != null  and reciver != ''">reciver,</if>
+            <if test="sender != null  and sender != ''">sender,</if>
+            <if test="isRead != null ">is_read,</if>
+            <if test="bussinessId != null  and bussinessId != ''">bussiness_id,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null  and createTime != ''">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null  and updateTime != ''">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="messageType != null ">#{messageType},</if>
+            <if test="messageTitle != null  and messageTitle != ''">#{messageTitle},</if>
+            <if test="messageContent != null ">#{messageContent},</if>
+            <if test="reciver != null  and reciver != ''">#{reciver},</if>
+            <if test="sender != null  and sender != ''">#{sender},</if>
+            <if test="isRead != null ">#{isRead},</if>
+            <if test="bussinessId != null  and bussinessId != ''">#{bussinessId},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null  and createTime != ''">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussMessageInfo" parameterType="com.cms.buss_service.message.BussMessageInfo">
+        UPDATE buss_message_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="messageType != null ">message_type = #{messageType},</if>
+            <if test="messageTitle != null  and messageTitle != ''">message_title = #{messageTitle},</if>
+            <if test="messageContent != null ">message_content = #{messageContent},</if>
+            <if test="reciver != null  and reciver != ''">reciver = #{reciver},</if>
+            <if test="sender != null  and sender != ''">sender = #{sender},</if>
+            <if test="isRead != null ">is_read = #{isRead},</if>
+            <if test="bussinessId != null  and bussinessId != ''">bussiness_id = #{bussinessId},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null  and createTime != ''">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null  and updateTime != ''">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussMessageInfoById" parameterType="Long">
+        DELETE FROM buss_message_info WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussMessageInfoByIds" parameterType="String">
+        DELETE FROM buss_message_info WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

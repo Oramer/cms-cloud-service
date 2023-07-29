@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <springProperty scope="context" name="logging.file.path" source="logging.file.path"/>
+    <contextName>cms-log</contextName>
+    <!--输出到控制台 ConsoleAppender-->
+    <appender name="ConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出（配色）：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%black(%d{yyyy-MM-dd HH:mm})|%black(%thread-%-3level)|%black(『%logger{60}』) - %magenta(%msg) %n
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="FileInfoAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--按时间保存日志 修改格式可以按小时、按天、月来保存-->
+            <fileNamePattern>${logging.file.path}/cms-log.info.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--保存时长-->
+            <MaxHistory>90</MaxHistory>
+            <!--文件大小-->
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="FileErrorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n
+            </pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>${logging.file.path}/cms-log.fail.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <MaxHistory>90</MaxHistory>
+        </rollingPolicy>
+    </appender>
+    <root level="info">
+        <!--<appender-ref ref="ConsoleAppender"/>-->
+        <appender-ref ref="FileInfoAppender"/>
+        <appender-ref ref="FileErrorAppender"/>
+    </root>
+
+</configuration>

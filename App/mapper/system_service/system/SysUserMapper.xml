@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.system_service.system.mapper.SysUserMapper">
+
+    <resultMap type="com.cms.system_service.system.domain.SysUser" id="SysUserResult">
+        <result property="userId"    column="user_id"    />
+        <result property="orgId"    column="org_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="userType"    column="user_type"    />
+        <result property="email"    column="email"    />
+        <result property="phonenumber"    column="phonenumber"    />
+        <result property="sex"    column="sex"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="password"    column="password"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="loginIp"    column="login_ip"    />
+        <result property="loginDate"    column="login_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="cloudPk"    column="cloud_pk"    />
+        <result property="ud1"    column="ud1"    />
+        <result property="ud2"    column="ud2"    />
+        <result property="ud3"    column="ud3"    />
+        <result property="ud4"    column="ud4"    />
+        <result property="ud5"    column="ud5"    />
+        <result property="ud6"    column="ud6"    />
+        <result property="ud7"    column="ud7"    />
+        <result property="ud8"    column="ud8"    />
+        <result property="ud9"    column="ud9"    />
+        <result property="ud10"    column="ud10"    />
+        <result property="fxRoleName"    column="fxRoleName"    />
+        <result property="firstPercentage"    column="firstPercentage"    />
+        <result property="secondPercentage"    column="secondPercentage"    />
+        <association property="dept" column="dept_id" javaType="com.cms.system_service.system.domain.SysDept" resultMap="deptResult"/>
+        <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
+    </resultMap>
+
+    <resultMap id="deptResult" type="com.cms.system_service.system.domain.SysDept">
+        <id property="deptId" column="dept_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="leader" column="leader"/>
+        <result property="status" column="dept_status"/>
+    </resultMap>
+
+    <resultMap id="RoleResult" type="com.cms.system_service.system.domain.SysRole">
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleKey" column="role_key"/>
+        <result property="roleSort" column="role_sort"/>
+        <result property="dataScope" column="data_scope"/>
+        <result property="status" column="role_status"/>
+    </resultMap>
+
+    <select id="selectUserOption" parameterType="com.cms.system_service.system.domain.SysUser"
+            resultType="java.util.Map">
+			select u.user_id as id , u.nick_name as label from sys_user u
+	</select>
+    <!--查询用户个人中心的数据信息-->
+    <select id="queryUserInfoCount" resultType="java.util.Map">
+		SELECT
+		(SELECT  SUM(offest_amount) FROM buss_user_offest   WHERE  user_pk =  #{userPk}) as dyj,
+		(SELECT count(1)  FROM buss_user_card WHERE user_pk = #{userPk} ) as scc,
+		(SELECT SUM(ticket_account)  FROM buss_user_ticket_info WHERE user_id = #{userPk} ) as spc,
+		(SELECT count(1)  FROM buss_user_coupon WHERE user_pk = #{userPk} and whether_to_use='N') as yhq,
+		0 as czk,
+		(SELECT count(1) FROM buss_order_info WHERE order_persion = #{userPk} AND order_status = '1' AND order_type='1') as dfkm,
+		(SELECT count(1) FROM buss_order_info WHERE order_persion = #{userPk} AND order_status = '2' AND order_type='1') as yfkm,
+		(SELECT count(1) FROM buss_order_info WHERE order_persion = #{userPk} AND order_status = '5' AND order_type='1')  as ywcm,
+		0 as thhm,
+		(SELECT count(1) FROM buss_order_info WHERE order_persion = #{userPk} AND order_status != '4' AND order_type='1') as ddzs,
+		(SELECT SUM(product_count) from buss_user_card where user_pk = #{userPk}) as ucolection,
+		(SELECT count(pk) from buss_bucket_info where user_pk= #{userPk} and record_type='2' and `status`='1') as dytdds
+		FROM sys_user as u
+		LIMIT 1
+	</select>
+    <select id="selectAllocatedList" parameterType="com.cms.system_service.system.domain.SysUser"
+            resultMap="SysUserResult">
+        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+        from sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        left join sys_user_role ur on u.user_id = ur.user_id
+        left join sys_role r on r.role_id = ur.role_id
+        where u.del_flag = '0' and r.role_id = #{roleId}
+        <if test="userName != null and userName != ''">
+            AND u.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+    </select>
+
+    <select id="selectUnallocatedList" parameterType="com.cms.system_service.system.domain.SysUser"
+            resultMap="SysUserResult">
+        select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+        from sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        left join sys_user_role ur on u.user_id = ur.user_id
+        left join sys_role r on r.role_id = ur.role_id
+        where u.del_flag = '0' and (r.role_id != #{roleId} or r.role_id IS NULL)
+        and u.user_id not in (select u.user_id from sys_user u inner join sys_user_role ur on u.user_id = ur.user_id and
+        ur.role_id = #{roleId})
+        <if test="userName != null and userName != ''">
+            AND u.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+    </select>
+
+
+    <select id="selectUserListByRoleKey" resultType="com.cms.system_service.system.domain.SysUser">
+		select user_id as userId,nick_name as nickName ,user_name as userName from sys_user where user_id in ( select user_id from sys_user_role where role_id = ( select role_id from sys_role where role_key = #{roleKey} ) )
+		and del_flag = '0'
+	</select>
+
+    <sql id="selectUserVo">
+       select
+            u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber,
+            u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
+            d.dept_id, d.parent_id, d.dept_name, d.order_num, d.leader, d.status as dept_status,
+            r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status,
+            u.cloud_pk,u.ud1,u.ud2,u.ud3,u.ud4,u.ud5,u.ud6,u.ud7,u.ud8,u.ud9,u.ud10,fx.role_name as fxRoleName,
+            fx.first_percentage as firstPercentage,
+            fx.second_percentage as secondPercentage
+        from sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        left join sys_user_role ur on u.user_id = ur.user_id
+        left join sys_role r on r.role_id = ur.role_id
+        left JOIN sys_role_fenxiao fx on u.ud3 = fx.role_id
+    </sql>
+
+    <select id="selectUserList" parameterType="com.cms.system_service.system.domain.SysUser" resultMap="SysUserResult">
+        select
+        u.user_id, u.dept_id, u.nick_name, u.user_name, u.email,
+        u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag,
+        u.login_ip, u.login_date, u.create_by, u.create_time,
+        u.remark, d.dept_name, d.leader,u.ud1,u.ud2,u.ud3
+        from sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        where u.del_flag = '0'
+        <if test="userName != null and userName != ''">
+            AND u.user_name like concat('%', #{userName}, '%')
+        </if>
+        <if test="cloudPk!=null and cloudPk!=''">
+            AND u.cloud_pk = #{cloudPk}
+        </if>
+        <if test="status != null and status != ''">
+            AND u.status = #{status}
+        </if>
+        <if test="phonenumber != null and phonenumber != ''">
+            AND u.phonenumber like concat('%', #{phonenumber}, '%')
+        </if>
+        <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+        </if>
+        <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(u.create_time,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+        </if>
+        <if test="deptId != null and deptId != 0">
+            AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE FIND_IN_SET
+            (#{deptId},ancestors) ))
+        </if>
+        <!-- 数据范围过滤 -->
+        ${dataScope}
+    </select>
+
+    <select id="selectUserListByHoverCondition" parameterType="com.cms.buss_service.station.domain.SearchUserVo"
+            resultType="com.cms.buss_service.station.domain.SysUserVo">
+       SELECT us.* FROM (
+            SELECT
+            DISTINCT(u.user_id) as userId,u.nick_name as nickName,
+            u.avatar , u.phonenumber, u.create_time as createTime,
+            (select count(o.pk) from buss_order_info o where o.order_persion = u.user_id  AND o.order_status  IN ("2,3,5,6") ) as orderCount,
+            (select SUM(o.amountofMoney) from buss_order_info o where o.order_persion = u.user_id AND o.order_status  IN ("2,3,5,6") ) as orderMoney,
+            (select create_time from buss_order_info o where o.order_persion = u.user_id
+            AND o.order_status  IN ("2,3,5,6") order by create_time desc limit 1 ) as lastOrderTime
+            FROM sys_user u
+            LEFT JOIN sys_dept d on u.dept_id = d.dept_id
+            LEFT JOIN buss_order_info o ON u.user_id = o.order_persion
+            where u.del_flag = '0'
+            <if test="searchValue != null and searchValue != ''"> AND u.phonenumber like concat('%', #{searchValue}, '%') </if>
+            <if test="cloudPk!=null and cloudPk!=''">  AND u.cloud_pk = #{cloudPk}</if>
+            <if test="status != null and status != ''">  AND u.status = #{status}</if>
+            <if test="userId != null and userId != ''">  AND u.user_id = #{userId}</if>
+            <if test="utime!=null"><!--//用户注册时间 1今日 2本周 3本月 4本年-->
+                <if test="utime==1">AND to_days(u.create_time) = to_days(now())</if>
+                <if test="utime==2">AND YEARWEEK(date_format(u.create_time,'%Y-%m-%d')) = YEARWEEK(now())</if>
+                <if test="utime==3">AND date_format(u.create_time,'%Y-%m')=date_format(now(),'%Y-%m')</if>
+                <if test="utime==4">AND YEAR(u.create_time)=YEAR(NOW())</if>
+            </if>
+            <if test="otime!=null"><!--用户下单时间 1今日 2本周 3本月 4本年-->
+                <if test="otime==1">AND to_days(o.create_time) = to_days(now())</if>
+                <if test="otime==2">AND YEARWEEK(date_format(o.create_time,'%Y-%m-%d')) = YEARWEEK(now())</if>
+                <if test="otime==3">AND date_format(o.create_time,'%Y-%m')=date_format(now(),'%Y-%m')</if>
+                <if test="otime==4">AND YEAR(o.create_time)=YEAR(NOW())</if>
+            </if>
+       ) us  WHERE 1 = 1
+        <if test="omoney!=null"><!--下单金额1100元以下 2 100元 - 500元  3 500元 - 1000元 41000元以上-->
+            <if test="omoney==1">AND us.orderMoney <![CDATA[ < ]]> 100</if>
+            <if test="omoney==2">AND us.orderMoney <![CDATA[ >= ]]> 100 AND us.orderMoney <![CDATA[ < ]]> 500</if>
+            <if test="omoney==3">AND us.orderMoney <![CDATA[ >= ]]> 500 AND us.orderMoney <![CDATA[ < ]]> 1000</if>
+            <if test="omoney==4">AND us.orderMoney <![CDATA[ >= ]]> 1000</if>
+        </if>
+        <if test="ocount!=null"><!--订单数 1 10单以下  2 10 - 50单 3 50 - 100单 4100单以上-->
+            <if test="ocount==1">AND us.orderCount <![CDATA[ < ]]> 10</if>
+            <if test="ocount==2">AND us.orderCount <![CDATA[ >= ]]> 10 AND us.orderCount <![CDATA[ < ]]> 50</if>
+            <if test="ocount==3">AND us.orderCount <![CDATA[ >= ]]> 50 AND us.orderCount <![CDATA[ < ]]> 100</if>
+            <if test="ocount==4">AND us.orderCount <![CDATA[ >= ]]> 100</if>
+        </if>
+        <if test="otime!=null"><!--//用户下单时间 1今日 2本周 3本月 4本年-->
+            <if test="otime==1">AND to_days(us.lastOrderTime) = to_days(now())</if>
+            <if test="otime==2">AND YEARWEEK(date_format(us.lastOrderTime,'%Y-%m-%d')) = YEARWEEK(now())</if>
+            <if test="otime==3">AND date_format(us.lastOrderTime,'%Y-%m')=date_format(now(),'%Y-%m')</if>
+            <if test="otime==4">AND YEAR(us.lastOrderTime)=YEAR(NOW())</if>
+        </if>
+
+    </select>
+
+    <select id="selectUserByUserName" parameterType="String" resultMap="SysUserResult">
+        <include refid="selectUserVo"/>
+        where u.user_name = #{userName}
+    </select>
+
+    <select id="selectUserById" parameterType="String" resultMap="SysUserResult">
+        <include refid="selectUserVo"/>
+        where u.user_id = #{userId}
+    </select>
+
+    <select id="checkUserNameUnique" parameterType="String" resultType="int">
+		select count(1) from sys_user where user_name = #{userName}
+	</select>
+
+    <select id="checkPhoneUnique" parameterType="String" resultType="com.cms.system_service.system.domain.SysUser">
+         SELECT
+                u.user_id,
+                u.phonenumber,
+                u.nick_name,
+                u.email,
+                u.avatar,
+                u.cloud_pk,
+                w.station_charge AS ud5,
+                (select count(1) from buss_monthly_user_details  where user_id = u.user_id) as isQuser,
+                (SELECT count(1) from buss_station_poster WHERE user_pk = u.user_id) as isPoster,
+                (SELECT count(1) from buss_water_station_info WHERE station_charge = u.user_id) as isManger
+            FROM
+                sys_user u
+                LEFT JOIN buss_water_station_info w ON w.pk = u.cloud_pk
+            WHERE
+                u.phonenumber =#{phonenumber}
+	</select>
+
+    <select id="queryMyGroupUser" resultType="com.cms.system_service.system.domain.SysUser">
+        	SELECT
+                u.user_id,
+                u.phonenumber,
+                u.nick_name,
+                u.email,
+                u.avatar,
+                u.cloud_pk,
+                w.station_charge AS ud5,
+                (IF((select count(1) from buss_monthly_user_details  where user_id = u.user_id)>0,true,false)) as isQuser,
+                (IF((SELECT count(1) from buss_station_poster WHERE user_pk = u.user_id)>0,true,false)) as isPoster,
+                (IF((SELECT count(1) from buss_water_station_info WHERE station_charge = u.user_id)>0,true,false)) as isManger,
+            	mw.is_manger as ud7
+            FROM
+                sys_user u
+            LEFT JOIN buss_water_station_info w ON w.pk = u.cloud_pk
+			LEFT JOIN buss_monthly_user_details mw on mw.user_id = u.user_id
+			WHERE
+			FIND_IN_SET(u.user_id,(SELECT GROUP_CONCAT(user_id) FROM	buss_monthly_user_details WHERE	mouth_user_id =(SELECT	mouth_user_id  FROM	buss_monthly_user_details WHERE	user_id = #{userId})))
+    </select>
+
+    <select id="queryUserGroupId" resultType="java.lang.String">
+        SELECT	mouth_user_id  FROM	buss_monthly_user_details WHERE	user_id = #{userId}
+    </select>
+
+    <select id="checkEmailUnique" parameterType="String" resultMap="SysUserResult">
+		select user_id, email from sys_user where email = #{email}
+	</select>
+
+    <insert id="insertUser" parameterType="com.cms.system_service.system.domain.SysUser" useGeneratedKeys="true"
+            keyProperty="userId">
+        INSERT INTO sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">user_id,</if>
+            <if test="orgId != null  and orgId != ''">org_id,</if>
+            <if test="deptId != null  and deptId != ''">dept_id,</if>
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="nickName != null  and nickName != ''">nick_name,</if>
+            <if test="userType != null  and userType != ''">user_type,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="phonenumber != null  and phonenumber != ''">phonenumber,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="avatar != null  and avatar != ''">avatar,</if>
+            <if test="password != null  and password != ''">password,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="loginIp != null  and loginIp != ''">login_ip,</if>
+            <if test="loginDate != null ">login_date,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="cloudPk != null  and cloudPk != ''">cloud_pk,</if>
+            <if test="ud1 != null  and ud1 != ''">ud1,</if>
+            <if test="ud2 != null  and ud2 != ''">ud2,</if>
+            <if test="ud3 != null  and ud3 != ''">ud3,</if>
+            <if test="ud4 != null  and ud4 != ''">ud4,</if>
+            <if test="ud5 != null  and ud5 != ''">ud5,</if>
+            <if test="ud6 != null  and ud6 != ''">ud6,</if>
+            <if test="ud7 != null  and ud7 != ''">ud7,</if>
+            <if test="ud8 != null  and ud8 != ''">ud8,</if>
+            <if test="ud9 != null  and ud9 != ''">ud9,</if>
+            <if test="ud10 != null  and ud10 != ''">ud10,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null  and userId != ''">#{userId},</if>
+            <if test="orgId != null  and orgId != ''">#{orgId},</if>
+            <if test="deptId != null  and deptId != ''">#{deptId},</if>
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="nickName != null  and nickName != ''">#{nickName},</if>
+            <if test="userType != null  and userType != ''">#{userType},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="phonenumber != null  and phonenumber != ''">#{phonenumber},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="avatar != null  and avatar != ''">#{avatar},</if>
+            <if test="password != null  and password != ''">#{password},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="loginIp != null  and loginIp != ''">#{loginIp},</if>
+            <if test="loginDate != null ">#{loginDate},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="cloudPk != null  and cloudPk != ''">#{cloudPk},</if>
+            <if test="ud1 != null  and ud1 != ''">#{ud1},</if>
+            <if test="ud2 != null  and ud2 != ''">#{ud2},</if>
+            <if test="ud3 != null  and ud3 != ''">#{ud3},</if>
+            <if test="ud4 != null  and ud4 != ''">#{ud4},</if>
+            <if test="ud5 != null  and ud5 != ''">#{ud5},</if>
+            <if test="ud6 != null  and ud6 != ''">#{ud6},</if>
+            <if test="ud7 != null  and ud7 != ''">#{ud7},</if>
+            <if test="ud8 != null  and ud8 != ''">#{ud8},</if>
+            <if test="ud9 != null  and ud9 != ''">#{ud9},</if>
+            <if test="ud10 != null  and ud10 != ''">#{ud10},</if>
+        </trim>
+    </insert>
+
+    <update id="updateUser" parameterType="com.cms.system_service.system.domain.SysUser">
+        UPDATE sys_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orgId != null  and orgId != ''">org_id = #{orgId},</if>
+            <if test="deptId != null  and deptId != ''">dept_id = #{deptId},</if>
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
+            <if test="userType != null  and userType != ''">user_type = #{userType},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="phonenumber != null  and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
+            <if test="password != null  and password != ''">password = #{password},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="loginIp != null  and loginIp != ''">login_ip = #{loginIp},</if>
+            <if test="loginDate != null ">login_date = #{loginDate},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="cloudPk != null  and cloudPk != ''">cloud_pk = #{cloudPk},</if>
+            <if test="ud1 != null  and ud1 != ''">ud1 = #{ud1},</if>
+            <if test="ud2 != null  and ud2 != ''">ud2 = #{ud2},</if>
+            <if test="ud3 != null  and ud3 != ''">ud3 = #{ud3},</if>
+            <if test="ud4 != null  and ud4 != ''">ud4 = #{ud4},</if>
+            <if test="ud5 != null  and ud5 != ''">ud5 = #{ud5},</if>
+            <if test="ud6 != null  and ud6 != ''">ud6 = #{ud6},</if>
+            <if test="ud7 != null  and ud7 != ''">ud7 = #{ud7},</if>
+            <if test="ud8 != null  and ud8 != ''">ud8 = #{ud8},</if>
+            <if test="ud9 != null  and ud9 != ''">ud9 = #{ud9},</if>
+            <if test="ud10 != null  and ud10 != ''">ud10 = #{ud10},</if>
+        </trim>
+        WHERE user_id = #{userId}
+    </update>
+
+    <update id="updateUserStatus" parameterType="com.cms.system_service.system.domain.SysUser">
+ 		update sys_user set status = #{status} where user_id = #{userId}
+	</update>
+
+    <update id="updateUserAvatar" parameterType="com.cms.system_service.system.domain.SysUser">
+ 		update sys_user set avatar = #{avatar} where user_name = #{userName}
+	</update>
+
+    <update id="resetUserPwd" parameterType="com.cms.system_service.system.domain.SysUser">
+ 		update sys_user set password = #{password} where user_name = #{userName}
+	</update>
+
+    <delete id="deleteUserById" parameterType="String">
+ 		delete from sys_user where user_id = #{userId}
+ 	</delete>
+
+    <delete id="deleteUserByIds" parameterType="String">
+        update sys_user set del_flag = '2' where user_id in
+        <foreach collection="array" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+
+</mapper> 

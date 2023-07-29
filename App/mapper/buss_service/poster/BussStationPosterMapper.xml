@@ -1,0 +1,690 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.poster.mapper.BussStationPosterMapper">
+
+    <resultMap type="com.cms.buss_service.poster.domain.BussStationPoster" id="BussStationPosterResult">
+        <result property="pk" column="pk"/>
+        <result property="userPk" column="user_pk"/>
+        <result property="stationPk" column="station_pk"/>
+        <result property="parentPk" column="parent_pk"/>
+        <result property="joinTime" column="join_time"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="concatAddr" column="concat_addr"/>
+        <result property="postarea" column="postarea"/>
+        <result property="lnt" column="lnt"/>
+        <result property="lat" column="lat"/>
+        <result property="cardPicA" column="card_pic_a"/>
+        <result property="cardPicB" column="card_pic_b"/>
+        <result property="posterStatus" column="poster_status"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+        <association property="user" column="user_pk" select="queryUserInfo"/>
+    </resultMap>
+
+    <resultMap type="com.cms.buss_service.poster.domain.PosterDetailsVo" id="PosterDetailsResult">
+        <result property="pk" column="pk"/>
+        <result property="userPk" column="user_pk"/>
+        <result property="stationPk" column="station_pk"/>
+        <result property="parentPk" column="parent_pk"/>
+        <result property="joinTime" column="join_time"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="avatar" column="avatar"/>
+        <result property="concatAddr" column="concat_addr"/>
+        <result property="postarea" column="postarea"/>
+        <result property="lnt" column="lnt"/>
+        <result property="lat" column="lat"/>
+        <result property="cardPicA" column="card_pic_a"/>
+        <result property="cardPicB" column="card_pic_b"/>
+        <result property="posterStatus" column="poster_status"/>
+        <result property="reversion" column="reversion"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <result property="no11" column="no11"/>
+        <result property="no12" column="no12"/>
+        <result property="no13" column="no13"/>
+        <result property="no14" column="no14"/>
+        <result property="no15" column="no15"/>
+        <!-- <association property="user" column="user_pk" select="queryUserInfo"/>-->
+        <collection property="childs" column="pk" select="queryPosterChild"/>
+    </resultMap>
+
+    <select id="selectBussStationUserList" resultType="com.cms.system_service.system.domain.SysUser"
+            parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        SELECT * from sys_user WHERE cloud_pk=#{stationPk}
+    </select>
+
+    <sql id="selectBussStationPosterVo">
+        SELECT er.pk, er.user_pk, er.station_pk,
+        er.parent_pk, er.join_time,
+        er.nick_name, er.phonenumber,er.avatar,
+        er.concat_addr, er.postarea,
+        er.lnt, er.lat, er.card_pic_a, er.card_pic_b, er.poster_status, er.reversion,
+        er.create_by, er.create_time, er.update_by, er.update_time,
+        er.no1, er.no2, er.no3, er.no4, er.no5, er.no6, er.no7, er.no8, er.no9,
+        er.no10, er.no11, er.no12,
+		(select datediff(now(),er.join_time)) as no13,
+		(select count(1) from buss_station_poster p where p.parent_pk = er.pk)	as no14,
+		(select SUM(amount) from buss_order_info p where p.no5 = er.pk AND order_status = '5') as no15,
+		(select ws.station_name from buss_water_station_info ws where ws.pk = er.station_pk) as stationName
+        FROM buss_station_poster AS er
+        LEFT JOIN sys_user u ON u.user_id  =  er.user_pk
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+
+    </sql>
+    <select id="checkIsPoster" resultType="java.lang.Integer">
+        SELECT count(1) from buss_station_poster WHERE user_pk = #{userPk}
+    </select>
+    <!--查询派单员关联的用户信息-->
+    <select id="queryUserInfo" resultMap="com.cms.system_service.system.mapper.SysUserMapper.SysUserResult">
+        select * from sys_user where user_id = #{userId}
+    </select>
+    <!--查询派单员徒弟详情-->
+    <select id="queryPosterChild" resultMap="BussStationPosterResult">
+        <include refid="selectBussStationPosterVo"/>
+        where parent_pk = #{parentPk}
+    </select>
+    <!--查询派单员详情-->
+    <select id="selectPosterDetailsVo" resultMap="PosterDetailsResult">
+        <include refid="selectBussStationPosterVo"/>
+        WHERE er.pk = #{pk}
+    </select>
+    <select id="queryUserIncome" resultType="java.util.Map"
+            parameterType="com.cms.buss_service.station.domain.BussStationInountRecord">
+        SELECT
+        (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userId} and status=1 and source_from=1
+        <choose>
+            <when test="quickSearch!=null and quickSearch!=1">
+
+                <if test="quickSearch==2"><!--查询当日数据-->
+                    AND to_days(create_time) = to_days(now())
+                </if>
+                <if test="quickSearch==3"><!--查询当周数据-->
+                    AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())
+                </if>
+                <if test="quickSearch==4"><!--查询当月数据-->
+                    AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+                </if>
+                <if test="quickSearch==5"><!--查询当年数据-->
+                    AND YEAR(create_time)=YEAR(NOW())
+                </if>
+
+            </when>
+            <otherwise>
+                <if test="searchStart!=null and searchStart!=''">
+                    and create_time  <![CDATA[ >= ]]> #{searchStart}
+                </if>
+                <if test="searchEnd!=null and searchEnd!=''">
+                    and create_time <![CDATA[ <= ]]> #{searchEnd}
+                </if>
+            </otherwise>
+        </choose>
+        ) AS inc1, <!--配送费-->
+        (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userId} and status=1 and source_from=4
+        <choose>
+            <when test="quickSearch!=null and quickSearch!=1">
+                <if test="quickSearch==2"><!--查询当日数据-->
+                    AND to_days(create_time) = to_days(now())
+                </if>
+                <if test="quickSearch==3"><!--查询当周数据-->
+                    AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())
+                </if>
+                <if test="quickSearch==4"><!--查询当月数据-->
+                    AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+                </if>
+                <if test="quickSearch==5"><!--查询当年数据-->
+                    AND YEAR(create_time)=YEAR(NOW())
+                </if>
+
+            </when>
+            <otherwise>
+                <if test="searchStart!=null and searchStart!=''">
+                    and create_time  <![CDATA[ >= ]]> #{searchStart}
+                </if>
+                <if test="searchEnd!=null and searchEnd!=''">
+                    and create_time <![CDATA[ <= ]]> #{searchEnd}
+                </if>
+            </otherwise>
+        </choose>
+        ) AS inc2, <!--爬楼费-->
+        (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userId} and status=1 and source_from=3
+        <choose>
+            <when test="quickSearch!=null and quickSearch!=1">
+                <if test="quickSearch==2"><!--查询当日数据-->
+                    AND to_days(create_time) = to_days(now())
+                </if>
+                <if test="quickSearch==3"><!--查询当周数据-->
+                    AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())
+                </if>
+                <if test="quickSearch==4"><!--查询当月数据-->
+                    AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+                </if>
+                <if test="quickSearch==5"><!--查询当年数据-->
+                    AND YEAR(create_time)=YEAR(NOW())
+                </if>
+
+            </when>
+            <otherwise>
+                <if test="searchStart!=null and searchStart!=''">
+                    and create_time  <![CDATA[ >= ]]> #{searchStart}
+                </if>
+                <if test="searchEnd!=null and searchEnd!=''">
+                    and create_time <![CDATA[ <= ]]> #{searchEnd}
+                </if>
+            </otherwise>
+        </choose>
+        ) AS inc3, <!--距离提成-->
+        (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userId} and status=1 and source_from=5
+        <choose>
+            <when test="quickSearch!=null and quickSearch!=1">
+                <if test="quickSearch==2"><!--查询当日数据-->
+                    AND to_days(create_time) = to_days(now())
+                </if>
+                <if test="quickSearch==3"><!--查询当周数据-->
+                    AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())
+                </if>
+                <if test="quickSearch==4"><!--查询当月数据-->
+                    AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+                </if>
+                <if test="quickSearch==5"><!--查询当年数据-->
+                    AND YEAR(create_time)=YEAR(NOW())
+                </if>
+
+            </when>
+            <otherwise>
+                <if test="searchStart!=null and searchStart!=''">
+                    and create_time  <![CDATA[ >= ]]> #{searchStart}
+                </if>
+                <if test="searchEnd!=null and searchEnd!=''">
+                    and create_time <![CDATA[ <= ]]> #{searchEnd}
+                </if>
+            </otherwise>
+        </choose>
+        ) AS inc4, <!--分享奖励-->
+        (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userId} and status=1 and source_from=2
+        <choose>
+            <when test="quickSearch!=null and quickSearch!=1">
+                <if test="quickSearch==2"><!--查询当日数据-->
+                    AND to_days(create_time) = to_days(now())
+                </if>
+                <if test="quickSearch==3"><!--查询当周数据-->
+                    AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())
+                </if>
+                <if test="quickSearch==4"><!--查询当月数据-->
+                    AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+                </if>
+                <if test="quickSearch==5"><!--查询当年数据-->
+                    AND YEAR(create_time)=YEAR(NOW())
+                </if>
+
+            </when>
+            <otherwise>
+                <if test="searchStart!=null and searchStart!=''">
+                    and create_time  <![CDATA[ >= ]]> #{searchStart}
+                </if>
+                <if test="searchEnd!=null and searchEnd!=''">
+                    and create_time <![CDATA[ <= ]]> #{searchEnd}
+                </if>
+            </otherwise>
+        </choose>
+        ) AS inc5, <!--下级配送提成-->
+        (SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userId} and status=1
+        <choose>
+            <when test="quickSearch!=null and quickSearch!=1">
+                <if test="quickSearch==2"><!--查询当日数据-->
+                    AND to_days(create_time) = to_days(now())
+                </if>
+                <if test="quickSearch==3"><!--查询当月数据-->
+                    <!-- AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now())-->
+                    AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+                </if>
+                <if test="quickSearch==4"><!--查询当年数据-->
+                    AND YEAR(create_time)=YEAR(NOW())
+                </if>
+                <!-- <if test="quickSearch==5">
+                     AND YEAR(create_time)=YEAR(NOW())//查询当年数据
+                 </if>-->
+            </when>
+            <otherwise>
+                <if test="searchStart!=null and searchStart!=''">
+                    and create_time  <![CDATA[ >= ]]> #{searchStart}
+                </if>
+                <if test="searchEnd!=null and searchEnd!=''">
+                    and create_time <![CDATA[ <= ]]> #{searchEnd}
+                </if>
+            </otherwise>
+        </choose>
+        ) AS inc6 <!--下级配送提成-->
+        from buss_station_poster LIMIT 1
+    </select>
+
+    <select id="queryPaiSongFei" resultType="java.math.BigDecimal"
+            parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userPk} and status=1 and source_from=1
+        <if test="quickSearch=='2'"><!--查询当日数据-->
+            AND to_days(create_time) = to_days(now());
+        </if>
+        <if test="quickSearch=='3'"><!--查询当周数据-->
+            AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now());
+        </if>
+        <if test="quickSearch=='4'"><!--查询当月数据-->
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="quickSearch=='5'"><!--查询当年数据-->
+            AND YEAR(create_time)=YEAR(NOW())
+        </if>
+        <if test="searchStart!=null and searchStart!=''">
+            and create_time  <![CDATA[ >= ]]> #{searchStart}
+        </if>
+        <if test="searchEnd!=null and searchEnd!=''">
+            and create_time <![CDATA[ <= ]]> #{searchEnd}
+        </if>
+    </select>
+    <select id="queryPaLouFei" resultType="java.math.BigDecimal"
+            parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userPk} and status=1 and source_from=4
+        <if test="quickSearch=='2'"><!--查询当日数据-->
+            AND to_days(create_time) = to_days(now());
+        </if>
+        <if test="quickSearch=='3'"><!--查询当周数据-->
+            AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now());
+        </if>
+        <if test="quickSearch=='4'"><!--查询当月数据-->
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="quickSearch=='5'"><!--查询当年数据-->
+            AND YEAR(create_time)=YEAR(NOW())
+        </if>
+        <if test="searchStart!=null and searchStart!=''">
+            and create_time  <![CDATA[ >= ]]> #{searchStart}
+        </if>
+        <if test="searchEnd!=null and searchEnd!=''">
+            and create_time <![CDATA[ <= ]]> #{searchEnd}
+        </if>
+    </select>
+    <select id="queryJuLiTicheng" resultType="java.math.BigDecimal"
+            parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userPk} and status=1 and source_from=3
+        <if test="quickSearch=='2'"><!--查询当日数据-->
+            AND to_days(create_time) = to_days(now());
+        </if>
+        <if test="quickSearch=='3'"><!--查询当周数据-->
+            AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now());
+        </if>
+        <if test="quickSearch=='4'"><!--查询当月数据-->
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="quickSearch=='5'"><!--查询当年数据-->
+            AND YEAR(create_time)=YEAR(NOW())
+        </if>
+        <if test="searchStart!=null and searchStart!=''">
+            and create_time  <![CDATA[ >= ]]> #{searchStart}
+        </if>
+        <if test="searchEnd!=null and searchEnd!=''">
+            and create_time <![CDATA[ <= ]]> #{searchEnd}
+        </if>
+    </select>
+    <select id="queryFenxiang" resultType="java.math.BigDecimal"
+            parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userPk} and status=1 and source_from=3
+        <if test="quickSearch=='2'"><!--查询当日数据-->
+            AND to_days(create_time) = to_days(now());
+        </if>
+        <if test="quickSearch=='3'"><!--查询当周数据-->
+            AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now());
+        </if>
+        <if test="quickSearch=='4'"><!--查询当月数据-->
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="quickSearch=='5'"><!--查询当年数据-->
+            AND YEAR(create_time)=YEAR(NOW())
+        </if>
+        <if test="searchStart!=null and searchStart!=''">
+            and create_time  <![CDATA[ >= ]]> #{searchStart}
+        </if>
+        <if test="searchEnd!=null and searchEnd!=''">
+            and create_time <![CDATA[ <= ]]> #{searchEnd}
+        </if>
+    </select>
+    <select id="queryXiaJiPeisong" resultType="java.math.BigDecimal"
+            parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userPk} and status=1 and source_from=3
+        <if test="quickSearch=='2'"><!--查询当日数据-->
+            AND to_days(create_time) = to_days(now());
+        </if>
+        <if test="quickSearch=='3'"><!--查询当周数据-->
+            AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now());
+        </if>
+        <if test="quickSearch=='4'"><!--查询当月数据-->
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="quickSearch=='5'"><!--查询当年数据-->
+            AND YEAR(create_time)=YEAR(NOW())
+        </if>
+        <if test="searchStart!=null and searchStart!=''">
+            and create_time  <![CDATA[ >= ]]> #{searchStart}
+        </if>
+        <if test="searchEnd!=null and searchEnd!=''">
+            and create_time <![CDATA[ <= ]]> #{searchEnd}
+        </if>
+    </select>
+    <select id="queryZongTc" resultType="java.math.BigDecimal"
+            parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        SELECT SUM(deduct_num) from buss_poster_dispatch_reward_record
+        where user_id=#{userPk} and status=1 and source_from=3
+        <if test="quickSearch=='2'"><!--查询当日数据-->
+            AND to_days(create_time) = to_days(now());
+        </if>
+        <if test="quickSearch=='3'"><!--查询当周数据-->
+            AND YEARWEEK(date_format(create_time,'%Y-%m-%d')) = YEARWEEK(now());
+        </if>
+        <if test="quickSearch=='4'"><!--查询当月数据-->
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="quickSearch=='5'"><!--查询当年数据-->
+            AND YEAR(create_time)=YEAR(NOW())
+        </if>
+        <if test="searchStart!=null and searchStart!=''">
+            and create_time  <![CDATA[ >= ]]> #{searchStart}
+        </if>
+        <if test="searchEnd!=null and searchEnd!=''">
+            and create_time <![CDATA[ <= ]]> #{searchEnd}
+        </if>
+    </select>
+
+
+    <!--查询我的下级派单员-->
+    <select id="selectMyChildPoster" resultType="java.util.Map">
+        SELECT er.pk, er.user_pk, er.station_pk,
+        er.parent_pk as parentPk,
+        er.join_time as joinTime,
+        er.nick_name as nickName,
+        er.phonenumber as phonenumber,er.avatar as avatar,
+        er.concat_addr as concatAddr, er.postarea ,
+        er.lnt, er.lat, er.card_pic_a as cardPicA, er.card_pic_b as cardPicB,
+        <!--u.phonenumber as phonenumber,
+        u.avatar as avatar,
+        u.user_id as userId,-->
+        (SELECT count(1) from buss_order_info where no5 = er.pk and to_days(create_time) = to_days(now())) as no5,
+        (SELECT count(1) from buss_order_info where no5 = er.pk and DATE_FORMAT(create_time, '%Y-%m') =
+        DATE_FORMAT(now(),'%Y-%m') ) as no6,
+        er.no7, er.no8, er.no9,
+        er.no10, er.no11,
+        er.no12,
+        (select datediff(now(),er.join_time)) as no13,
+        (select count(pk) from buss_station_poster p where p.parent_pk = er.pk) as no14,
+        (select count(pk) from buss_order_info p where p.no5 = er.pk) as no15
+        FROM buss_station_poster AS er
+        <!--  LEFT JOIN sys_user u ON u.user_id  =  er.user_pk-->
+        where er.parent_pk = #{parentPk}
+        <if test="searchValue!=null and searchValue!=''">and er.nick_name like concat('%',#{searchValue},'%')</if>
+    </select>
+
+    <!--查询快递员统计信息-->
+    <select id="queryPosterTjInfo" resultType="java.util.Map"
+            parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        SELECT
+        (SELECT count(*) from buss_order_info WHERE FIND_IN_SET(order_status,'2,3,5,6') AND no5=sp.pk) AS orderCount,
+        COUNT(DISTINCT(o.order_persion)) AS persionCount,
+        (select SUM(product_amount) from buss_order_product_info WHERE FIND_IN_SET(order_info_pk,(
+        SELECT GROUP_CONCAT(pk) from buss_order_info WHERE FIND_IN_SET(order_status,'2,3,5,6') AND no5=sp.pk
+        ))) AS productCount,
+        SUM(hp.no1) AS htCount,
+        SUM(bl.no1) AS qtCount,
+        SUM(bp.no1) AS ytCount,
+        sp.nick_name AS nickName,
+        sp.phonenumber as phonenumber,
+        sp.avatar as avatar
+        FROM buss_station_poster sp
+        LEFT JOIN buss_order_info o ON sp.pk = o.no5 AND FIND_IN_SET(o.order_status,'2,3,5,6')
+        <choose>
+
+            <when test="quickSearch==2"><!--查询当日数据-->
+                AND to_days(o.create_time) = to_days(now())
+            </when>
+            <when test="quickSearch==3"><!--查询当周数据-->
+                AND YEARWEEK(date_format(o.create_time,'%Y-%m-%d')) = YEARWEEK(now())
+            </when>
+            <when test="quickSearch==4"><!--查询当月数据-->
+                AND date_format(o.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+            </when>
+            <when test="quickSearch==5"><!--查询当年数据-->
+                AND YEAR(o.create_time)=YEAR(NOW())
+            </when>
+            <otherwise>
+                <if test="searchStart!=null and searchStart!=''">
+                    and o.create_time  <![CDATA[ >= ]]> #{searchStart}
+                </if>
+                <if test="searchEnd!=null and searchEnd!=''">
+                    and o.create_time <![CDATA[ <= ]]> #{searchEnd}
+                </if>
+            </otherwise>
+        </choose>
+        LEFT JOIN buss_bucket_info bl on bl.order_pk = o.pk and bl.record_type='1' and bl.status='1'
+        LEFT JOIN buss_bucket_info bp on bp.order_pk = o.pk and bp.record_type='2' and bp.status='2'
+        LEFT JOIN buss_bucket_info hp on hp.order_pk = o.pk and hp.record_type='4'
+        WHERE 1=1
+        <if test="pk!=null and pk!=''">AND FIND_IN_SET(o.no5 , #{pk})</if>
+    </select>
+
+    <select id="selectBussStationPosterList" parameterType="com.cms.buss_service.poster.domain.BussStationPoster"
+            resultMap="BussStationPosterResult">
+        <include refid="selectBussStationPosterVo"/>
+        <where>
+            1 = 1
+            <if test="searchValue!=null and searchValue!=''">AND er.phonenumber like concat('%',#{searchValue},'%')</if>
+            <if test="userPk != null  and userPk != ''">AND er.user_pk = #{userPk}</if>
+            <if test="stationPk != null  and stationPk != ''">AND er.station_pk = #{stationPk}</if>
+            <if test="parentPk != null  and parentPk != ''">AND er.parent_pk = #{parentPk}</if>
+            <if test="joinTime != null  and joinTime != ''">AND er.join_time = #{joinTime}</if>
+            <if test="phonenumber != null  and phonenumber != ''">AND er.phonenumber = #{phonenumber}</if>
+            <if test="nickName != null  and nickName != ''">AND er.nick_name = #{nickName}</if>
+            <if test="avatar != null  and avatar != ''">AND er.avatar = #{avatar}</if>
+            <if test="concatAddr != null  and concatAddr != ''">AND er.concat_addr = #{concatAddr}</if>
+            <if test="postarea != null  and postarea != ''">AND er.postarea = #{postarea}</if>
+            <if test="lnt != null  and lnt != ''">AND er.lnt = #{lnt}</if>
+            <if test="lat != null  and lat != ''">AND er.lat = #{lat}</if>
+            <if test="cardPicA != null  and cardPicA != ''">AND er.card_pic_a = #{cardPicA}</if>
+            <if test="cardPicB != null  and cardPicB != ''">AND er.card_pic_b = #{cardPicB}</if>
+            <if test="posterStatus != null  and posterStatus != ''">AND er.poster_status = #{posterStatus}</if>
+            <if test="reversion != null  and reversion != ''">AND er.reversion = #{reversion}</if>
+            <if test="no1 != null  and no1 != ''">AND er.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND er.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND er.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND er.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND er.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND er.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND er.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND er.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND er.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND er.no10 = #{no10}</if>
+            <if test="no11 != null  and no11 != ''">AND er.no11 = #{no11}</if>
+            <if test="no12 != null  and no12 != ''">AND er.no12 = #{no12}</if>
+            <if test="no13 != null  and no13 != ''">AND er.no13 = #{no13}</if>
+            <if test="no14 != null  and no14 != ''">AND er.no14 = #{no14}</if>
+            <if test="no15 != null  and no15 != ''">AND er.no15 = #{no15}</if>
+        </where>
+        ${dataScope}
+        ORDER BY er.create_time DESC
+    </select>
+
+    <select id="selectBussStationPosterById" parameterType="String" resultMap="BussStationPosterResult">
+        <include refid="selectBussStationPosterVo"/>
+        WHERE er.pk = #{pk}
+    </select>
+
+    <insert id="insertBussStationPoster" parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        INSERT INTO buss_station_poster
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">pk,</if>
+            <if test="userPk != null  and userPk != ''">user_pk,</if>
+            <if test="stationPk != null  and stationPk != ''">station_pk,</if>
+            <if test="parentPk != null  and parentPk != ''">parent_pk,</if>
+            <if test="joinTime != null  and joinTime != ''">join_time,</if>
+            <if test="nickName != null  and nickName != ''">nick_name,</if>
+            <if test="phonenumber != null  and phonenumber != ''">phonenumber,</if>
+            <if test="avatar != null  and avatar != ''">avatar,</if>
+            <if test="concatAddr != null  and concatAddr != ''">concat_addr,</if>
+            <if test="postarea != null  and postarea != ''">postarea,</if>
+            <if test="lnt != null  and lnt != ''">lnt,</if>
+            <if test="lat != null  and lat != ''">lat,</if>
+            <if test="cardPicA != null  and cardPicA != ''">card_pic_a,</if>
+            <if test="cardPicB != null  and cardPicB != ''">card_pic_b,</if>
+            <if test="posterStatus != null  and posterStatus != ''">poster_status,</if>
+            <if test="reversion != null  and reversion != ''">reversion,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null  and no1 != ''">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+            <if test="no11 != null  and no11 != ''">no11,</if>
+            <if test="no12 != null  and no12 != ''">no12,</if>
+            <if test="no13 != null  and no13 != ''">no13,</if>
+            <if test="no14 != null  and no14 != ''">no14,</if>
+            <if test="no15 != null  and no15 != ''">no15,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pk != null  and pk != ''">#{pk},</if>
+            <if test="userPk != null  and userPk != ''">#{userPk},</if>
+            <if test="stationPk != null  and stationPk != ''">#{stationPk},</if>
+            <if test="parentPk != null  and parentPk != ''">#{parentPk},</if>
+            <if test="joinTime != null  and joinTime != ''">#{joinTime},</if>
+            <if test="nickName != null  and nickName != ''">#{nickName},</if>
+            <if test="phonenumber != null  and phonenumber != ''">#{phonenumber},</if>
+            <if test="avatar != null  and avatar != ''">#{avatar},</if>
+            <if test="concatAddr != null  and concatAddr != ''">#{concatAddr},</if>
+            <if test="postarea != null  and postarea != ''">#{postarea},</if>
+            <if test="lnt != null  and lnt != ''">#{lnt},</if>
+            <if test="lat != null  and lat != ''">#{lat},</if>
+            <if test="cardPicA != null  and cardPicA != ''">#{cardPicA},</if>
+            <if test="cardPicB != null  and cardPicB != ''">#{cardPicB},</if>
+            <if test="posterStatus != null  and posterStatus != ''">#{posterStatus},</if>
+            <if test="reversion != null  and reversion != ''">#{reversion},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+            <if test="no11 != null  and no11 != ''">#{no11},</if>
+            <if test="no12 != null  and no12 != ''">#{no12},</if>
+            <if test="no13 != null  and no13 != ''">#{no13},</if>
+            <if test="no14 != null  and no14 != ''">#{no14},</if>
+            <if test="no15 != null  and no15 != ''">#{no15},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussStationPoster" parameterType="com.cms.buss_service.poster.domain.BussStationPoster">
+        UPDATE buss_station_poster
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userPk != null  and userPk != ''">user_pk = #{userPk},</if>
+            <if test="stationPk != null  and stationPk != ''">station_pk = #{stationPk},</if>
+            <if test="parentPk != null  and parentPk != ''">parent_pk = #{parentPk},</if>
+            <if test="joinTime != null  and joinTime != ''">join_time = #{joinTime},</if>
+            <if test="nickName != null  and nickName != ''">nick_name = #{nickName},</if>
+            <if test="phonenumber != null  and phonenumber != ''">phonenumber = #{phonenumber},</if>
+            <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
+            <if test="concatAddr != null  and concatAddr != ''">concat_addr = #{concatAddr},</if>
+            <if test="postarea != null  and postarea != ''">postarea = #{postarea},</if>
+            <if test="lnt != null  and lnt != ''">lnt = #{lnt},</if>
+            <if test="lat != null  and lat != ''">lat = #{lat},</if>
+            <if test="cardPicA != null  and cardPicA != ''">card_pic_a = #{cardPicA},</if>
+            <if test="cardPicB != null  and cardPicB != ''">card_pic_b = #{cardPicB},</if>
+            <if test="posterStatus != null  and posterStatus != ''">poster_status = #{posterStatus},</if>
+            <if test="reversion != null  and reversion != ''">reversion = #{reversion},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null  and no1 != ''">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+            <if test="no11 != null  and no11 != ''">no11 = #{no11},</if>
+            <if test="no12 != null  and no12 != ''">no12 = #{no12},</if>
+            <if test="no13 != null  and no13 != ''">no13 = #{no13},</if>
+            <if test="no14 != null  and no14 != ''">no14 = #{no14},</if>
+            <if test="no15 != null  and no15 != ''">no15 = #{no15},</if>
+        </trim>
+        WHERE pk = #{pk}
+    </update>
+
+    <delete id="deleteBussStationPosterById" parameterType="String">
+        DELETE FROM buss_station_poster WHERE pk = #{pk}
+    </delete>
+
+    <delete id="deleteBussStationPosterByIds" parameterType="String">
+        DELETE FROM buss_station_poster WHERE pk in
+        <foreach item="pk" collection="array" open="(" separator="," close=")">
+            #{pk}
+        </foreach>
+    </delete>
+
+</mapper>

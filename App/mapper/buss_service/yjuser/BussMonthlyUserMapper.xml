@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.buss_service.yjuser.mapper.BussMonthlyUserMapper">
+
+    <resultMap type="com.cms.buss_service.yjuser.domain.BussMonthlyUser" id="BussMonthlyUserResult">
+        <result property="id" column="id"/>
+        <result property="stationId" column="station_id"/>
+        <result property="cname" column="cname"/>
+        <result property="city" column="city"/>
+        <result property="province" column="province"/>
+        <result property="county" column="county"/>
+        <result property="cdetails" column="cdetails"/>
+        <result property="fpType" column="fp_type"/>
+        <result property="xqBrand" column="xq_brand"/>
+        <result property="yxqCount" column="yxq_count"/>
+        <result property="dcCount" column="dc_count"/>
+        <result property="remarks" column="remarks"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="no1" column="no1"/>
+        <result property="no2" column="no2"/>
+        <result property="no3" column="no3"/>
+        <result property="no4" column="no4"/>
+        <result property="no5" column="no5"/>
+        <result property="no6" column="no6"/>
+        <result property="no7" column="no7"/>
+        <result property="no8" column="no8"/>
+        <result property="no9" column="no9"/>
+        <result property="no10" column="no10"/>
+        <association property="user" column="create_by" select="querySqUser"/>
+    </resultMap>
+
+    <select id="querySqUser" resultType="com.cms.system_service.system.domain.SysUser">
+        select * from sys_user where user_id = #{createBy}
+    </select>
+
+
+    <select id="selectUserYjOrderInfo" resultType="java.math.BigDecimal">
+        SELECT sum(amountofMoney)
+        FROM buss_order_info
+        WHERE FIND_IN_SET(order_status,"2,3,5,6")
+        AND no13 =#{yjId}
+        AND PERIOD_DIFF(date_format(now() , '%Y%m' ) , date_format(create_time, '%Y%m' ) ) = 0
+    </select>
+
+    <sql id="selectBussMonthlyUserVo">
+        SELECT er.id,er.station_id, er.cname, er.city, er.province, er.county, er.cdetails, er.fp_type, er.xq_brand, er.yxq_count, er.dc_count, er.remarks, er.status, er.create_by, er.create_time, er.update_by, er.update_time, er.no1, er.no2, er.no3, er.no4, er.no5, er.no6, er.no7, er.no8, er.no9, er.no10        FROM buss_monthly_user AS er
+        LEFT JOIN sys_user u ON u.user_id  =  er.create_by
+        LEFT JOIN sys_dept d ON u.dept_id  =  d.dept_id
+    </sql>
+
+    <select id="selectBussMonthlyUserList" parameterType="com.cms.buss_service.yjuser.domain.BussMonthlyUser"
+            resultMap="BussMonthlyUserResult">
+        <include refid="selectBussMonthlyUserVo"/>
+        <where>
+            1 = 1
+            <if test="stationId != null  and stationId != ''">AND er.station_id = #{stationId}</if>
+            <if test="cname != null  and cname != ''">AND er.cname like concat('%', #{cname}, '%')</if>
+            <if test="city != null  and city != ''">AND er.city = #{city}</if>
+            <if test="province != null  and province != ''">AND er.province = #{province}</if>
+            <if test="county != null  and county != ''">AND er.county = #{county}</if>
+            <if test="cdetails != null  and cdetails != ''">AND er.cdetails = #{cdetails}</if>
+            <if test="fpType != null  and fpType != ''">AND er.fp_type = #{fpType}</if>
+            <if test="xqBrand != null  and xqBrand != ''">AND er.xq_brand = #{xqBrand}</if>
+            <if test="yxqCount != null  and yxqCount != ''">AND er.yxq_count = #{yxqCount}</if>
+            <if test="dcCount != null  and dcCount != ''">AND er.dc_count = #{dcCount}</if>
+            <if test="remarks != null  and remarks != ''">AND er.remarks = #{remarks}</if>
+            <if test="status != null ">AND er.status = #{status}</if>
+            <if test="no1 != null ">AND er.no1 = #{no1}</if>
+            <if test="no2 != null  and no2 != ''">AND er.no2 = #{no2}</if>
+            <if test="no3 != null  and no3 != ''">AND er.no3 = #{no3}</if>
+            <if test="no4 != null  and no4 != ''">AND er.no4 = #{no4}</if>
+            <if test="no5 != null  and no5 != ''">AND er.no5 = #{no5}</if>
+            <if test="no6 != null  and no6 != ''">AND er.no6 = #{no6}</if>
+            <if test="no7 != null  and no7 != ''">AND er.no7 = #{no7}</if>
+            <if test="no8 != null  and no8 != ''">AND er.no8 = #{no8}</if>
+            <if test="no9 != null  and no9 != ''">AND er.no9 = #{no9}</if>
+            <if test="no10 != null  and no10 != ''">AND er.no10 = #{no10}</if>
+        </where>
+        ${dataScope}
+    </select>
+
+    <select id="selectBussMonthlyUserById" parameterType="Long" resultMap="BussMonthlyUserResult">
+        <include refid="selectBussMonthlyUserVo"/>
+        WHERE er.id = #{id}
+    </select>
+
+    <insert id="insertBussMonthlyUser" parameterType="com.cms.buss_service.yjuser.domain.BussMonthlyUser"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO buss_monthly_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stationId != null  and stationId != ''">station_id,</if>
+            <if test="cname != null  and cname != ''">cname,</if>
+            <if test="city != null  and city != ''">city,</if>
+            <if test="province != null  and province != ''">province,</if>
+            <if test="county != null  and county != ''">county,</if>
+            <if test="cdetails != null  and cdetails != ''">cdetails,</if>
+            <if test="fpType != null  and fpType != ''">fp_type,</if>
+            <if test="xqBrand != null  and xqBrand != ''">xq_brand,</if>
+            <if test="yxqCount != null  and yxqCount != ''">yxq_count,</if>
+            <if test="dcCount != null  and dcCount != ''">dc_count,</if>
+            <if test="remarks != null  and remarks != ''">remarks,</if>
+            <if test="status != null ">status,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="no1 != null ">no1,</if>
+            <if test="no2 != null  and no2 != ''">no2,</if>
+            <if test="no3 != null  and no3 != ''">no3,</if>
+            <if test="no4 != null  and no4 != ''">no4,</if>
+            <if test="no5 != null  and no5 != ''">no5,</if>
+            <if test="no6 != null  and no6 != ''">no6,</if>
+            <if test="no7 != null  and no7 != ''">no7,</if>
+            <if test="no8 != null  and no8 != ''">no8,</if>
+            <if test="no9 != null  and no9 != ''">no9,</if>
+            <if test="no10 != null  and no10 != ''">no10,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stationId != null  and stationId != ''">#{stationId},</if>
+            <if test="cname != null  and cname != ''">#{cname},</if>
+            <if test="city != null  and city != ''">#{city},</if>
+            <if test="province != null  and province != ''">#{province},</if>
+            <if test="county != null  and county != ''">#{county},</if>
+            <if test="cdetails != null  and cdetails != ''">#{cdetails},</if>
+            <if test="fpType != null  and fpType != ''">#{fpType},</if>
+            <if test="xqBrand != null  and xqBrand != ''">#{xqBrand},</if>
+            <if test="yxqCount != null  and yxqCount != ''">#{yxqCount},</if>
+            <if test="dcCount != null  and dcCount != ''">#{dcCount},</if>
+            <if test="remarks != null  and remarks != ''">#{remarks},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="no1 != null ">#{no1},</if>
+            <if test="no2 != null  and no2 != ''">#{no2},</if>
+            <if test="no3 != null  and no3 != ''">#{no3},</if>
+            <if test="no4 != null  and no4 != ''">#{no4},</if>
+            <if test="no5 != null  and no5 != ''">#{no5},</if>
+            <if test="no6 != null  and no6 != ''">#{no6},</if>
+            <if test="no7 != null  and no7 != ''">#{no7},</if>
+            <if test="no8 != null  and no8 != ''">#{no8},</if>
+            <if test="no9 != null  and no9 != ''">#{no9},</if>
+            <if test="no10 != null  and no10 != ''">#{no10},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBussMonthlyUser" parameterType="com.cms.buss_service.yjuser.domain.BussMonthlyUser">
+        UPDATE buss_monthly_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stationId != null  and stationId != ''">station_id = #{stationId},</if>
+            <if test="cname != null  and cname != ''">cname = #{cname},</if>
+            <if test="city != null  and city != ''">city = #{city},</if>
+            <if test="province != null  and province != ''">province = #{province},</if>
+            <if test="county != null  and county != ''">county = #{county},</if>
+            <if test="cdetails != null  and cdetails != ''">cdetails = #{cdetails},</if>
+            <if test="fpType != null  and fpType != ''">fp_type = #{fpType},</if>
+            <if test="xqBrand != null  and xqBrand != ''">xq_brand = #{xqBrand},</if>
+            <if test="yxqCount != null  and yxqCount != ''">yxq_count = #{yxqCount},</if>
+            <if test="dcCount != null  and dcCount != ''">dc_count = #{dcCount},</if>
+            <if test="remarks != null  and remarks != ''">remarks = #{remarks},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="no1 != null ">no1 = #{no1},</if>
+            <if test="no2 != null  and no2 != ''">no2 = #{no2},</if>
+            <if test="no3 != null  and no3 != ''">no3 = #{no3},</if>
+            <if test="no4 != null  and no4 != ''">no4 = #{no4},</if>
+            <if test="no5 != null  and no5 != ''">no5 = #{no5},</if>
+            <if test="no6 != null  and no6 != ''">no6 = #{no6},</if>
+            <if test="no7 != null  and no7 != ''">no7 = #{no7},</if>
+            <if test="no8 != null  and no8 != ''">no8 = #{no8},</if>
+            <if test="no9 != null  and no9 != ''">no9 = #{no9},</if>
+            <if test="no10 != null  and no10 != ''">no10 = #{no10},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteBussMonthlyUserById" parameterType="Long">
+        DELETE FROM buss_monthly_user WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteBussMonthlyUserByIds" parameterType="String">
+        DELETE FROM buss_monthly_user WHERE id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
