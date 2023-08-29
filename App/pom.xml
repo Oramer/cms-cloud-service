@@ -5,27 +5,28 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.14</version>
+        <version>2.3.12.RELEASE</version>
         <relativePath/>
     </parent>
     <artifactId>cxc-base-services</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>cxc-base-services</name>
-    <properties>
-        <docker.image.prefix>wjw</docker.image.prefix>
-    </properties>
+    <packaging>jar</packaging>
+<!--    <properties>-->
+<!--        <docker.image.prefix>wjw</docker.image.prefix>-->
+<!--    </properties>-->
     <dependencies>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>2.3.2.RELEASE</version>
+<!--            <version>2.3.2.RELEASE</version>-->
         </dependency>
         <!--MySql数据库连接-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.20</version>
+            <version>5.1.47</version>
             <scope>runtime</scope>
         </dependency>
         <!-- 引入阿里数据库连接池 -->
@@ -50,7 +51,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <version>2.3.5.RELEASE</version>
+<!--            <version>2.3.5.RELEASE</version>-->
         </dependency>
 
         <!--pagehelper分页助手-->
@@ -69,7 +70,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
-            <version>2.3.11.RELEASE</version>
+<!--            <version>2.3.11.RELEASE</version>-->
         </dependency>
         <!--lmbok-->
         <dependency>
@@ -197,15 +198,11 @@
     </dependencies>
     <build>
         <finalName>cms-cloud-service</finalName>
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <fork>true</fork> &lt;!&ndash; 如果没有该配置，devtools不会生效 &ndash;&gt;-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <!-- docker插件-->
 <!--            <plugin>-->
 <!--                <groupId>com.spotify</groupId>-->
@@ -230,6 +227,6 @@
 <!--                    </resources>-->
 <!--                </configuration>-->
 <!--            </plugin>-->
-<!--        </plugins>-->
+        </plugins>
     </build>
 </project>

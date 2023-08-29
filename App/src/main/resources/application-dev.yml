@@ -1,0 +1,67 @@
+server:
+  port: 9244
+
+cms: 
+  name: cms  
+  version: 3.8.3 
+  copyrightYear: 2022
+  demoEnabled: true  
+  profile: C:/uploadPath 
+  addressEnabled: true
+  captchaType: math
+
+spring:
+  servlet:
+    multipart:
+      max-request-size: 50MB
+      max-file-size: 50MB
+  application:
+    name: cxc-base-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/water_cms?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&
+      nullCatalogMeansCurrent=true
+    username: root
+    password: root123
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 192.168.10.203 #docker中环境地址
+    port: 6379
+    database: 3
+
+mybatis-plus:
+  global-config:
+    banner: false
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.cms.**.**.model
+  configuration:
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+
+
+logging:
+  config: classpath:log-config-dev.xml
+  level:
+    org.apache: error
+    org.springframework: error
+    io: error
+    o.s: error
+    com.cms: debug
+    org.quartz: error
+    liquibase.executor.jvm: error
+  file:
+    path: D:\log\
+
+oss:
+  assectkey: LTAI4GDzxxHrXTP73nJgg6TS
+  assectsecret: giV65WxF90vGyHRRdZ013hM2jOyz1N
+  endpoint: oss-cn-shanghai.aliyuncs.com
+  bucketname: cms-cloud-file
+
