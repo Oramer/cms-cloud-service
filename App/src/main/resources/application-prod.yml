@@ -49,12 +49,12 @@ pagehelper:
 
 logging:
   config: classpath:logback-prod.xml
-#  level:
+  level:
 #    org.apache: error
 #    org.springframework: error
 #    io: error
 #    o.s: error
-#    com.cms: debug
+    com.cms: debug
 #    org.quartz: error
 #    liquibase.executor.jvm: error
 #  file:

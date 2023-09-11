@@ -2,6 +2,7 @@ package com.cms.buss_service.app;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
@@ -30,8 +31,9 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping({"/api/wx"})
+@Slf4j
 public class WeiChatLoginCtl extends AppCtl {
-    /*  29 */   private static final Logger log = LoggerFactory.getLogger(WeiChatLoginCtl.class);
+//    /*  29 */   private static final Logger log = LoggerFactory.getLogger(WeiChatLoginCtl.class);
 
 
     @Autowired(required = false)
@@ -54,7 +56,7 @@ public class WeiChatLoginCtl extends AppCtl {
     public RestResult ResultBeaninitWxLogin(String code) throws JSONException {
         try {
             /*  54 */
-            String param = "appid=wx578320de8ea6562e&secret=0f9981962adfc9a73f1042919a195627&js_code=" + code + "&grant_type=authorization_code";
+            String param = "appid=wxdff1e9e886e19ab2&secret=916414f7dae386b5289277d5f574cbc1&js_code=" + code + "&grant_type=authorization_code";
             /*  55 */
             String jsonString = HttpUtils.sendGet("https://api.weixin.qq.com/sns/jscode2session", param);
 
@@ -80,6 +82,7 @@ public class WeiChatLoginCtl extends AppCtl {
     @RequestMapping({"/decodeUserInfo"})
     public RestResult getUserInfo(String encryptedData, String sessionKey, String iv, String openId, String cloudPk, String shareInfo) {
         try {
+            log.info("获取用户信息,请求参数为: encryptedData:{},sessionKey:{},iv:{},openId:{},cloudPk:{},shareInfo:{}",encryptedData,sessionKey,iv,openId,cloudPk,shareInfo);
             /*  80 */
             String account = getLoginPhone(encryptedData, sessionKey, iv);
             /*  81 */
@@ -87,13 +90,16 @@ public class WeiChatLoginCtl extends AppCtl {
             /*  82 */
             if (user == null) {
                 /*  83 */
+                log.info("未查询到该商户:{}信息,创建商户,插入信息到表sys_user中",account);
                 user = createLoginBody(account, openId, cloudPk, shareInfo);
                 /*  84 */
                 this.userMapper.insertUser(user);
+                log.info("创建用户:{}信息成功",account);
             }
 
             /*  87 */
             this.redisCache.setCacheObject("user:temp:pwd" + user.getUserName(), user.getPassword());
+            log.info("保存到用户信息到redis中");
 
             /*  89 */
             String token = JwtUtils.create(user);
@@ -102,12 +108,13 @@ public class WeiChatLoginCtl extends AppCtl {
             /*  91 */
             user.setPassword(null);
             /*  92 */
+            log.info("返回user信息为:{}",user.toString());
             return RestResult.ok(user);
             /*  93 */
         } catch (Exception e) {
             /*  94 */
             e.printStackTrace();
-
+            log.error(e.getMessage(),e);
             /*  96 */
             return RestResult.fail("登录失败");
         }
@@ -181,36 +188,41 @@ public class WeiChatLoginCtl extends AppCtl {
         /* 152 */
         JSONObject obj = JSONObject.parseObject(result);
         /* 153 */
-        log.error("微信登录结果 .....|" + result);
+        log.info("微信登录结果 .....|" + result);
         /* 154 */
         return (String) obj.get("purePhoneNumber");
     }
 
 
-    public SysUser createLoginBody(String account, String openId, String cloudPk, String shareInfo) {
-        /* 166 */
+    public SysUser createLoginBody(String account, String openId, String cloudPk, String shareInfo) throws Exception {
         SysUser user = new SysUser();
-        /* 167 */
-        String pwd = SecurityUtils.generatorPassword(account.substring(0, 6), account);
-        /* 168 */
-        user.setUserName(account);
-        /* 169 */
-        user.setNickName("微信用户");
-        /* 170 */
-        user.setUserId(IdUtils.get());
-        /* 171 */
-        user.setPhonenumber(account);
-        /* 172 */
-        user.setCreateTime(DateUtils.getTime());
-        /* 173 */
-        user.setPassword(pwd);
-        /* 174 */
-        user.setUd9(shareInfo);
-        /* 175 */
-        user.setUd10(openId);
+        try {
+            /* 167 */
+            String pwd = SecurityUtils.generatorPassword(account.substring(0, 6), account);
+            /* 168 */
+            user.setUserName(account);
+            /* 169 */
+            user.setNickName("微信用户");
+            /* 170 */
+            user.setUserId("IW"+DateUtils.dateTimeNow());
+            /* 171 */
+            user.setPhonenumber(account);
+            /* 172 */
+            user.setCreateTime(DateUtils.getTime());
+            /* 173 */
+            user.setPassword(pwd);
+            /* 174 */
+            user.setUd9(shareInfo);
+            /* 175 */
+            user.setUd10(openId);
 
-        /* 177 */
-        user.setCloudPk(StringUtils.isNotBlank(cloudPk) ? cloudPk : String.valueOf(Constants.SYSTEM_ADMIN_STATION_ID));
+            /* 177 */
+            user.setCloudPk(StringUtils.isNotBlank(cloudPk) ? cloudPk : String.valueOf(Constants.SYSTEM_ADMIN_STATION_ID));
+        }catch (Exception e){
+            e.printStackTrace();
+            log.error(e.getMessage(),e);
+            throw new Exception();
+        }
         /* 178 */
         return user;
     }
